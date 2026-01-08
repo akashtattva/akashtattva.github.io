@@ -143,3 +143,38 @@
     right: 0;
   }
 }
+
+/* On wider screens show all menu items inline instead of a "Show More" dropdown */
+@media (min-width: 685px) {
+  .menu--desktop .menu__trigger {
+    display: none;
+  }
+
+  .menu--desktop .menu__dropdown {
+    display: flex !important;
+    position: static;
+    flex-direction: row;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    padding: 0;
+    margin: 0 0 0 10px;
+    z-index: auto;
+    align-items: center;
+  }
+
+  .menu--desktop .menu__dropdown > li {
+    margin-right: 20px;
+    margin-bottom: 0;
+    white-space: nowrap;
+  }
+
+  .menu--desktop .menu__dropdown > li:last-of-type {
+    margin-right: 0;
+  }
+
+  .menu--desktop .menu__dropdown > li > a {
+    display: inline-block;
+    padding: 0;
+  }
+}

@@ -1,13 +1,13 @@
 {
-  "name": "astro-theme-terminal",
+  "name": "my-tech-blog",
   "type": "module",
   "version": "1.0.0",
-  "description": "A terminal-inspired theme for Astro, ported from Hugo Terminal Theme by panr",
+  "description": "A personal tech blog powered by Astro and the Terminal theme",
   "license": "MIT",
-  "author": "Dennis Klappe",
+  "author": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dennisklappe/astro-theme-terminal"
+    "url": ""
   },
   "keywords": [
     "astro",
