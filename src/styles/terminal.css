@@ -1,6 +1,15 @@
 /* Fira Code: https://github.com/tonsky/FiraCode */
 @import url('https://cdn.staticdelivr.com/gfonts/css2?family=Fira+Code:wght@300..700&display=swap');
 
+/* Geist Mono: local font, regular weight */
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('/fonts/GeistMono-Thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #252422;
   --foreground: #fed9b7;
@@ -24,7 +33,6 @@ html {
 
 body {
   font-family:
-    "Fira Code",
     "JetBrains Mono",
     Monaco,
     Consolas,
@@ -44,15 +52,18 @@ body {
 }
 
 h1 {
+  font-family: 'Geist Mono', monospace !important;
+  text-transform: uppercase !important;
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: calc(var(--font-size) * 0.2);
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Geist Mono', monospace !important;
   display: block;
   font-size: calc(var(--font-size) * 1.1);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
 }
 
 h1, h2, h3, h4, h5, h6,

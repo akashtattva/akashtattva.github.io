@@ -106,6 +106,20 @@ const base = import.meta.env.BASE_URL.endsWith("/")
 
         wrapper.insertBefore(titleDiv, block);
       });
+
+      // Responsive tables
+      const tables = document.querySelectorAll(".post-content table");
+      tables.forEach((table) => {
+        // Create wrapper
+        const wrapper = document.createElement("div");
+        wrapper.className = "table-wrapper";
+        
+        // Insert wrapper before table
+        table.parentNode?.insertBefore(wrapper, table);
+        
+        // Move table into wrapper
+        wrapper.appendChild(table);
+      });
     });
   </script>
 

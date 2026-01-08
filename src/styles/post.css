@@ -258,12 +258,45 @@ sup[data-footnote-ref] a {
 }
 
 sup[data-footnote-ref] a:hover {
+
   background: color-mix(in srgb, var(--accent) 20%, transparent);
+
 }
 
+
+
 /* Footnote back references */
+
 .data-footnote-backref {
+
   text-decoration: none;
+
   margin-left: 5px;
+
   font-size: 0.9em;
+
+}
+
+
+
+/* Responsive Tables */
+
+.table-wrapper {
+
+  width: 100%;
+
+  overflow-x: auto;
+
+  -webkit-overflow-scrolling: touch;
+
+  margin: 25px 0;
+
+}
+
+
+
+.table-wrapper table {
+
+  margin: 0;
+
 }

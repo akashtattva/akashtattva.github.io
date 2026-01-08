@@ -54,3 +54,25 @@ image: "/path/to/image.jpg"    # Optional (string)
 - **Add a Page**: Create a `.astro` file in `src/pages/`.
 - **Update Menu**: Edit the `<header>` section in `src/layouts/BaseLayout.astro`.
 - **Change Footer**: Edit the `<footer>` section in `src/layouts/BaseLayout.astro`.
+
+## Creating Standalone Pages
+To add a standalone page (like About, Contact, Lists) that is part of the main menu but separate from blog posts:
+
+1.  **Create Content**: Create a markdown file in `src/pages/` (e.g., `src/pages/mylife.md`).
+2.  **Use PageLayout**: Add the following frontmatter to the file:
+    ```markdown
+    ---
+    layout: ../layouts/PageLayout.astro
+    title: My Life
+    description: A description of the page
+    ---
+    ```
+3.  **Update Menu**: Add a link to `src/layouts/BaseLayout.astro` in the `<nav>` section.
+    ```html
+    <li><a href={`${base}mylife/`}>My Life</a></li>
+    ```
+
+This approach ensures:
+-   **No Logic Required**: You don't need to filter these pages out of the blog post index.
+-   **Clean URLs**: `src/pages/mylife.md` -> `/mylife`.
+-   **Separation**: Keeps blog posts in `content/` and standalone pages in `pages/`.
