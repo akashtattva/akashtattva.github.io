@@ -1,5 +1,5 @@
 {
-  "name": "my-tech-blog",
+  "name": "Akash's Notes",
   "type": "module",
   "version": "1.0.0",
   "description": "A personal tech blog powered by Astro and the Terminal theme",
@@ -7,7 +7,7 @@
   "author": "",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/akashtattva/akashtattva.github.io"
   },
   "keywords": [
     "astro",
