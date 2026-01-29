@@ -1,12 +1,11 @@
 ---
-layout: post
-title: "Test-time Compute"
+title: "What is Test-time Compute"
 pubDate: 2025-08-23
 --- 
 
-### What is Test-time compute
+Test-time compute means giving a model extra thinking time when it is answering a question. Instead of replying right away, the model spends more computation during inference to explore options, check its own work, and then choose a better answer. You can think of it like taking a few minutes to draft and revise an email before hitting send. Letting models think longer at test time can beat simply making the model bigger.
 
-Test-time compute means giving a model extra thinking time when it is answering a question. Instead of replying right away, the model spends more computation during inference to explore options, check its own work, and then choose a better answer. You can think of it like taking a few minutes to draft and revise an email before hitting send. Recent research shows that letting models think longer at test time can beat simply making the model bigger. Two papers that frame this space are ["Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters"](https://arxiv.org/abs/2408.03314) and ["Inference Scaling Laws: An Empirical Analysis of Compute-Optimal Inference"](https://openreview.net/forum?id=VNckp7JEHn), which both study how much extra inference compute is worth it and how to spend it.
+Two papers that frame this space are ["Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters"](https://arxiv.org/abs/2408.03314) and ["Inference Scaling Laws: An Empirical Analysis of Compute-Optimal Inference"](https://openreview.net/forum?id=VNckp7JEHn), which both study how much extra inference compute is worth it and how to spend it.
 
 ### Where test-time compute came from
 

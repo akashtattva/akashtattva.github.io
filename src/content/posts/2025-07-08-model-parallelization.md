@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Model parallelization techniques"
 pubDate: 2025-07-08
 ---

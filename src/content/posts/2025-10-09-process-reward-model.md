@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Process Reward Model in RL Training"
 pubDate: 2025-10-09
 ---

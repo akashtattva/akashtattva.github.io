@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Frameworks"
 pubDate: 2025-12-21
 ---

@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Technical blog posts I enjoyed in August 2025"
 pubDate: 2025-08-15
 ---

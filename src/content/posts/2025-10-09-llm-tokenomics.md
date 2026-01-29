@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "LLM Tokenomics"
 pubDate: 2025-10-09
 ---

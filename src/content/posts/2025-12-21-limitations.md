@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Limitations"
 pubDate: 2025-12-21
 ---

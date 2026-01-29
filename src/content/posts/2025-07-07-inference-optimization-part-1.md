@@ -1,5 +1,4 @@
 ---
-layout: post
 title: "Inference Optimization, Part-1"
 pubDate: 2025-07-07
 ---

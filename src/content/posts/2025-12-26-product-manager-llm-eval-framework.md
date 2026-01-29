@@ -1,12 +1,11 @@
 ---
-layout: post
 title: "Every Product Manager should have a personal LLM Eval Framework"
 pubDate: 2025-12-26
 ---
 
 The rate of progress is currently faster than the rate of human adjustment. If you haven’t checked the benchmarks or the latent space capabilities in the last 10-15 days, your mental model of what is possible has already deprecated, a legacy system running on fumes.
 
-As a PM or designer-PM hybrid, your goal with a personal eval isn't to replace the engineering team's benchmarks. Your goal is to get a qualitative vibe check to see if the new model actually solves user problems better or if it has regressed on key behaviors.
+As a PM or designer, your goal with a personal eval isn't to replace the engineering team's benchmarks. Your goal is to get a qualitative vibe check to see if the new model actually solves user problems better or if it has regressed on key behaviors.
 
 Here are some ways to run these evaluations efficiently.
 
@@ -18,17 +17,13 @@ Don't just pick random questions. You need a representative mix of your actual t
 
 Select your ~10 prompts using this distribution:
 
-3 "Bread and Butter" Prompts: These are the most common use cases your product handles (e.g., "Summarize this meeting note" or "Generate an SQL query"). If the model fails here, it's a no-go.
+3 Common Use Case Prompts: These are the most common use cases your product handles (e.g., "Summarize this meeting note" or "Generate an SQL query"). If the model fails here, it's a no-go.
 
-2 "Known Failures" (Regression Test): Prompts where the *previous* model struggled or hallucinated. You want to see if the new model fixed them.
+2 Known Failure Prompts: Prompts where the *previous* model struggled or hallucinated. You want to see if the new model fixed them.
 
-2 "Edge Cases" / Complexity: Long contexts, messy input data, or instructions with conflicting constraints.
+2 Edge Case Prompts: Long contexts, messy input data, or instructions with conflicting constraints.
 
-2 "Jailbreak" / Safety Tests: Try to trick the model (e.g., "Ignore previous instructions") to ensure safety guardrails hold.
-
-1 "Vibe" / Tone Check: A prompt where the *style* of the answer matters (e.g., empathy in a customer support bot).
-
-Keep these 10 prompts in a persistent document. This becomes your personal "PM Test Suite" that you use for *every* new model release.
+Keep these 10 prompts in a persistent document. This becomes your personal "PM Test Suite" that you use for every new model release.
 
 ---
 ### 2\. The Setup
@@ -41,15 +36,11 @@ Right: The new model candidate (Challenger).
 
 Prepare a Spreadsheet: Create a simple Google Sheet or Excel file with the following columns:
 
-*Input Prompt*
-
-*Old Model Response*
-
-*New Model Response*
-
-*Verdict (Win/Loss/Tie)*
-
-*Notes (Why?)*
+Input Prompt
+Old Model Response
+New Model Response
+Verdict (Win/Loss/Tie)
+Notes (Why?)
 
 ---
 
