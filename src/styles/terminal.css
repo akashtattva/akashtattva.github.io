@@ -39,12 +39,12 @@
 }
 
 :root {
-  --background: #000714;
+  --background: #04151f;
   --foreground: #E3D8A0;
-  --accent: #bfd200;
+  --accent: #66DDCC;
   --radius: 0;
   --font-size: 1.1rem;
-  --line-height: 1.54em;
+  --line-height: 1.45em;
 }
 
 html {
@@ -63,8 +63,8 @@ body {
   font-family:
     "Helvetica Neue Light", Arial, Helvetica, sans-serif;
   font-size: var(--font-size);
-  font-weight: 300;
-  letter-spacing: 0.06em;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   line-height: var(--line-height);
   background-color: var(--background);
   color: var(--foreground);
@@ -89,6 +89,15 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   font-size: calc(var(--font-size) * 1.6);
   letter-spacing: 0.05em;
+}
+
+body {
+  background-image: 
+        linear-gradient(rgba(138, 225, 128, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(138, 225, 128, 0.1) 1px, transparent 1px),
+        linear-gradient(rgba(235, 219, 178, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(235, 219, 178, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px, 50px 50px, 10px 10px, 10px 10px;
 }
 
 h1, h2, h3, h4, h5, h6,
