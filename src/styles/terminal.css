@@ -23,6 +23,14 @@
 }
 
 @font-face {
+  font-family: 'Helvetica Neue Light';
+  src: url('/fonts/HelveticaNeue-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
   font-family: 'Roboto Mono';
   src: url('/fonts/RobotoMono-Regular.ttf') format('truetype');
   font-weight: 400;
@@ -35,7 +43,7 @@
   --foreground: #E3D8A0;
   --accent: #bfd200;
   --radius: 0;
-  --font-size: 1rem;
+  --font-size: 1.1rem;
   --line-height: 1.54em;
 }
 
@@ -53,9 +61,10 @@ html {
 
 body {
   font-family:
-    "Roboto Mono", monospace;
+    "Helvetica Neue Light", Arial, Helvetica, sans-serif;
   font-size: var(--font-size);
-  font-weight: 400;
+  font-weight: 300;
+  letter-spacing: 0.06em;
   line-height: var(--line-height);
   background-color: var(--background);
   color: var(--foreground);
