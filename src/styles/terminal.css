@@ -64,7 +64,7 @@ body {
     "Helvetica Neue Regular", Arial, Helvetica, sans-serif;
   font-size: var(--font-size);
   font-weight: 400;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   line-height: var(--line-height);
   background-color: var(--background);
   color: var(--foreground);
