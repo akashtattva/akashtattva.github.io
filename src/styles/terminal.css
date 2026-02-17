@@ -15,26 +15,42 @@
 }
 
 @font-face {
-  font-family: 'Helvetica Neue Regular';
-  src: url('/fonts/HelveticaNeue-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Helvetica Neue Light';
-  src: url('/fonts/HelveticaNeue-Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Roboto Mono';
   src: url('/fonts/RobotoMono-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo/Archivo-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo/Archivo-MediumItalic.woff2') format('woff2');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo/Archivo-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Archivo';
+  src: url('/fonts/archivo/Archivo-SemiBoldItalic.woff2') format('woff2');
+  font-weight: 600;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -61,10 +77,10 @@ html {
 
 body {
   font-family:
-    "Helvetica Neue Regular", Arial, Helvetica, sans-serif;
+    "Archivo", Arial, Helvetica, sans-serif;
   font-size: var(--font-size);
-  font-weight: 400;
-  letter-spacing: 0.03em;
+  font-weight: 500;
+  letter-spacing: 0.01em;
   line-height: var(--line-height);
   background-color: var(--background);
   color: var(--foreground);
