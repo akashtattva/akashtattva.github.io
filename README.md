@@ -1,6 +1,4 @@
-# My Tech Blog
-
-A personal blog focused on Artificial Intelligence, Machine Learning, and Software Engineering, built with [Astro](https://astro.build) and the [Terminal](https://github.com/dennisklappe/astro-theme-terminal) theme.
+# personal notes website
 
 ## 🚀 Quick Start
 
