@@ -126,4 +126,4 @@ Generative Adversarial Networks (GANs) can also benefit from attention. The Self
 
 This allows the model to better model relationships between spatial regions, even those that are far apart. This helps to overcome the limitations of convolutional networks, which have a fixed filter size and thus a limited receptive field.
 
-For more details, you can refer to the original blog post: [Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)
+

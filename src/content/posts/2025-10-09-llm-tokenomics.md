@@ -2,7 +2,6 @@
 title: "LLM Tokenomics"
 pubDate: 2025-10-09
 ---
-
 LLM providers charge users based on the number of tokens processed. The cost per token differs for the input (prompt) and the output (response). Output tokens are typically more expensive. The way a model uses tokens has a direct impact on its performance.
 
 1. Context window: LLMs have a maximum context window, which is the total number of tokens they can "see" at one time, including both the input and output. A longer context window allows a model to handle more complex, multi-step tasks but is more computationally expensive.

@@ -1,5 +1,5 @@
 ---
-title: "Technical blog posts I enjoyed in August 2025"
+title: "Technical blog posts I enjoyed recently"
 pubDate: 2025-08-15
 ---
 
