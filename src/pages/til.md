@@ -1,7 +1,12 @@
 ---
 layout: ../layouts/PageLayout.astro
-title: TIL
-descrption: Today I Learned
+title: Reading List
+descrption: Reading list
 ---
 
-this page is dedicated to log what i read and learnt on a given date. I don't know how often i will update it. but i will try to as much as i can
+# Essays
+
+1. [Meditations On Moloch]
+(https://readscottalexander.com/posts/ssc-meditations-on-moloch)
+
+2. 
