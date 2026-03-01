@@ -6,7 +6,6 @@ descrption: Reading list
 
 # Essays
 
-1. [Meditations On Moloch]
-(https://readscottalexander.com/posts/ssc-meditations-on-moloch)
+1. [Meditations On Moloch](https://readscottalexander.com/posts/ssc-meditations-on-moloch)
 
 2. 
