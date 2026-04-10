@@ -1,7 +1,8 @@
 ---
-title: "Every Product Manager should have a personal LLM Eval Framework"
+
+## title: "Every Product Manager should have a personal LLM Eval Framework"
+
 pubDate: 2025-12-26
----
 
 The rate of progress is currently faster than the rate of human adjustment. If you haven’t checked the benchmarks or the latent space capabilities in the last 10-15 days, your mental model of what is possible has already deprecated, a legacy system running on fumes.
 
@@ -11,7 +12,7 @@ Here are some ways to run these evaluations efficiently.
 
 ---
 
-### 1\. Curate Your Golden Selection (The Data)
+### 1 Curate Your Golden Selection (The Data)
 
 Don't just pick random questions. You need a representative mix of your actual traffic. Since you are only picking around 10 inputs, every single one must have a specific purpose.
 
@@ -26,7 +27,8 @@ Select your ~10 prompts using this distribution:
 Keep these 10 prompts in a persistent document. This becomes your personal "PM Test Suite" that you use for every new model release.
 
 ---
-### 2\. The Setup
+
+### 2 The Setup
 
 Do a side-by-side comparison. Open two browser tabs/windows:
 
@@ -44,7 +46,7 @@ Notes (Why?)
 
 ---
 
-### 3\. Define Your Success Criteria
+### 3 Define Your Success Criteria
 
 Before you run the first prompt, decide what "better" looks like for your specific product.
 
@@ -58,7 +60,7 @@ Formatting: Did it output the JSON/Markdown/Table correctly?
 
 ---
 
-### 4\. Run the Execution
+### 4 Run the Execution
 
 Copy and paste your specific prompt into both windows simultaneously (or strictly one after another).
 
@@ -68,7 +70,7 @@ If possible, paste the outputs into your spreadsheet without looking at which mo
 
 ---
 
-### 5\. Analysis & Verdict
+### 5 Analysis & Verdict
 
 Tally up your score.
 
@@ -80,12 +82,14 @@ Loss: The new model hallucinated or refused a safe prompt.
 
 Example Spreadsheet:
 
-| Prompt Type | Input Snippet | Verdict | PM Notes |
-| :--- | :--- | :--- | :--- |
-| Bread & Butter | "Summarize this email..." | **Tie** | Both missed the attachment context, but summary was okay. |
-| Known Failure | "Extract the date from..." | **Win** | Old model said "tomorrow", New model correctly said "Oct 12". |
-| Edge Case | [Malformatted JSON snippet] | **Loss** | New model tried to "fix" the JSON but hallucinated a key. **CRITICAL FLAG.** |
-| Tone Check | "Explain error to user..." | **Win** | New model was much more empathetic and less robotic. |
+
+| Prompt Type    | Input Snippet               | Verdict  | PM Notes                                                                     |
+| -------------- | --------------------------- | -------- | ---------------------------------------------------------------------------- |
+| Bread & Butter | "Summarize this email..."   | **Tie**  | Both missed the attachment context, but summary was okay.                    |
+| Known Failure  | "Extract the date from..."  | **Win**  | Old model said "tomorrow", New model correctly said "Oct 12".                |
+| Edge Case      | [Malformatted JSON snippet] | **Loss** | New model tried to "fix" the JSON but hallucinated a key. **CRITICAL FLAG.** |
+| Tone Check     | "Explain error to user..."  | **Win**  | New model was much more empathetic and less robotic.                         |
+
 
 ---
 
