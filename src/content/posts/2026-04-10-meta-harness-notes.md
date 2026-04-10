@@ -1,8 +1,7 @@
 ---
-
-## title: "Meta-Harness: Detailed Notes"
-
+title: "Meta-Harness: Detailed Notes"
 pubDate: 2026-04-10
+---
 
 # Meta-Harness: Detailed Explanatory Notes
 

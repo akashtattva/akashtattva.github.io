@@ -1,10 +1,9 @@
 ---
-
-## title: "Every Product Manager should have a personal LLM Eval Framework"
-
+title: "Every Product Manager should have a personal LLM Eval Framework"
 pubDate: 2025-12-26
+---
 
-The rate of progress is currently faster than the rate of human adjustment. If you haven’t checked the benchmarks or the latent space capabilities in the last 10-15 days, your mental model of what is possible has already deprecated, a legacy system running on fumes.
+The rate of progress is currently faster than the rate of human adjustment. If you haven't checked the benchmarks or the latent space capabilities in the last 10-15 days, your mental model of what is possible has already deprecated, a legacy system running on fumes.
 
 As a PM or designer, your goal with a personal eval isn't to replace the engineering team's benchmarks. Your goal is to get a qualitative vibe check to see if the new model actually solves user problems better or if it has regressed on key behaviors.
 

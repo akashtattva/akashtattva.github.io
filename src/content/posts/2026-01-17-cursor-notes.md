@@ -1,8 +1,7 @@
 ---
-
-## title: "Working with Cursor: Rules, Commands, MCP servers, Modes, Hooks, Skills"
-
+title: "Working with Cursor: Rules, Commands, MCP servers, Modes, Hooks, Skills"
 pubDate: 2026-01-17
+---
 
 ## What are Rules, Commands, MCP servers, Modes, Hooks, Skills.
 
