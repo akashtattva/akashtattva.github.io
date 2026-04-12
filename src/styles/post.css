@@ -27,6 +27,7 @@
 .post-title {
   position: relative;
   color: var(--accent);
+  line-height: 1.2;
   margin-top: 0 !important;
   margin-bottom: 15px !important;
   padding-bottom: 15px;
