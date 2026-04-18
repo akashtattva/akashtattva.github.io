@@ -117,6 +117,27 @@ body {
     background-size: 10px 10px, 10px 10px, 50px 50px, 50px 50px;
 }
 
+/* Subtle radial gradient for a soft glow effect */
+body::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, rgba(248, 222, 34, 0.1) 0%, transparent 90%);
+  filter: blur(120px);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body {
+  position: relative;
+  z-index: 1;
+}
+
+
 h1, h2, h3, h4, h5, h6,
 p, ul, ol,
 img, figure, video,
