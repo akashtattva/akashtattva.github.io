@@ -1,24 +1,14 @@
 ---
 import FormattedDate from './FormattedDate.astro';
+import type { CollectionEntry } from 'astro:content';
 
 export interface Props {
-  post: {
-    slug: string;
-    data: {
-      title: string;
-      description?: string;
-      pubDate: Date;
-      author?: string;
-      tags?: string[];
-      image?: string;
-      externalLink?: string;
-    };
-  };
+  post: CollectionEntry<'posts'>;
 }
 
 const { post } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
-const postUrl = post.data.externalLink || `${base}posts/${post.slug}/`;
+const postUrl = post.data.externalLink || `${base}posts/${post.id}/`;
 const isExternal = !!post.data.externalLink;
 ---
 
@@ -57,7 +47,7 @@ const isExternal = !!post.data.externalLink;
   )}
   <div>
     <a href={postUrl} class="read-more button inline" target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener" : undefined}>
-      [Read more]
+      Read more
     </a>
   </div>
 </article>
