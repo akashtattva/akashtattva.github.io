@@ -56,9 +56,9 @@
 }
 
 :root {
-  --background: #fefae0;
-  --foreground: #a26769;
-  --accent: #231942;
+  --background: #18112C;
+  --foreground: #ffffff;
+  --accent: #e0b1cb;
   --radius: 0;
   --font-size: 1.1rem;
   --line-height: 1.45em;
