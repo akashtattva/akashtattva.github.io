@@ -58,7 +58,7 @@
 :root {
   --background: #000000;
   --foreground: #E7E1B1;
-  --accent: #FFD400;
+  --accent: #ffff3f;
   --font-size: 1.1rem;
   --line-height: 1.45em;
 }
@@ -76,8 +76,7 @@ html {
 }
 
 body {
-  font-family:
-    "Archivo", Arial, Helvetica, sans-serif;
+  font-family: 'Archivo', Arial, Helvetica, sans-serif !important;
   font-synthesis: none;
   font-size: var(--font-size);
   font-weight: 500;
