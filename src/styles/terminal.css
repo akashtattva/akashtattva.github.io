@@ -135,9 +135,10 @@ html {
 
 body {
   font-family: 'Source Serif 4', Arial, Helvetica, serif !important;
+
   font-synthesis: none;
   font-size: var(--font-size);
-  font-weight: 300;
+  font-weight: 400;
   /* letter-spacing: 0.0em; */
   line-height: var(--line-height);
   background-color: var(--background);
@@ -151,15 +152,15 @@ body {
 }
 
 h1 {
-  font-family: 'Source Serif 4', Arial, Helvetica, serif !important;
-  font-weight: 400 !important;
+  font-family: 'Archivo', 'Helvetica', sans-serif !important;
+  font-weight: 500 !important;
   text-decoration-thickness: 2px;
   text-underline-offset: calc(var(--font-size) * 0.2);
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Source Serif 4', Arial, Helvetica, sans-serif !important;
-  font-weight: 400 !important;
+  font-family: 'Archivo', 'Helvetica', sans-serif !important;
+  font-weight: 500 !important;
   display: block;
   font-size: calc(var(--font-size) * 1.6);
   /* letter-spacing: 0.0em; */
