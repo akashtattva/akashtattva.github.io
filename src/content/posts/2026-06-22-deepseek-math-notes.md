@@ -3,9 +3,7 @@ title: "DeepSeekMath Paper Notes"
 pubDate: 2026-06-22
 ---
 
-DeepSeekMath Understanding Notes
-
-What is DeepSeekMath
+DeepSeekMath Paper Notes
 
 DeepSeekMath is a 7 billion parameter language model created by DeepSeek AI in collaboration with Tsinghua University and Peking University. It is designed specifically to solve mathematical problems by reasoning step by step. The model achieves 51.7 percent accuracy on the MATH benchmark, which is a collection of very hard competition level math problems. This score is close to what GPT-4 and Gemini Ultra achieve, even though those are much larger closed source models that nobody can inspect or modify. DeepSeekMath is fully open source, meaning anyone can download it, study it, and build on top of it. The paper shows that you do not need a giant model with hundreds of billions of parameters to do well at math. What you need instead is high quality training data and a smart way to train the model using reinforcement learning.
 
