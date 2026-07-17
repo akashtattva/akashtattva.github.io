@@ -135,7 +135,7 @@ body::before {
   left: 50%;
   width: 900px;
   height: 900px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 90%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 90%);
   filter: blur(120px);
   transform: translate(-50%, -50%);
   pointer-events: none;
