@@ -146,8 +146,6 @@ Finally, PPO updates the model for several epochs using mini-batches. The clippe
 
 ## PPO end to end diagram
 
-![PPO end to end diagram from page 141](figures/ppo-end-to-end-figure-5-1-page-141.png)
-
 This diagram shows the whole PPO training loop in one view. The trainable policy generates responses. The reward model scores those responses. A reference policy supplies the KL penalty, which discourages the trainable policy from moving too far away from the original supervised fine tuned behavior. The reward after the KL penalty is used to compute GAE advantages. PPO then uses those advantages to update the policy for several epochs. After the update, the improved policy becomes the model used for the next generation step, so the loop repeats.
 
 ## Tokenization pitfalls in language model reinforcement learning
