@@ -65,9 +65,9 @@
 }
 
 :root {
-  --background: #000000;
-  --foreground: #E7E1B1;
-  --accent: #ffff3f;
+  --background: #faedcd;
+  --foreground: #240046;
+  --accent: #7b2cbf;
   --font-size: 1.1rem;
   --line-height: 1.45em;
 }
@@ -85,7 +85,7 @@ html {
 }
 
 body {
-  font-family: 'Source Serif 4', Arial, Helvetica, serif !important;
+  font-family: 'Roboto Mono' !important;
 
   font-synthesis: none;
   font-size: var(--font-size);
