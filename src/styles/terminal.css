@@ -85,7 +85,7 @@ html {
 }
 
 body {
-  font-family: 'Roboto Mono' !important;
+  font-family: 'Roboto Mono', monospace !important;
 
   font-synthesis: none;
   font-size: var(--font-size);
@@ -120,8 +120,8 @@ h1, h2, h3, h4, h5, h6 {
 
 body {
   background-image: 
-    linear-gradient(color-mix(in srgb, var(--accent) 14%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--accent) 10%, transparent) 1px, transparent 1px),
+    linear-gradient(color-mix(in srgb, var(--accent) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent) 1px, transparent 1px),
     linear-gradient(color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 1px),
     linear-gradient(90deg, color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 1px);
   background-size: 10px 10px, 10px 10px, 50px 50px, 50px 50px;
@@ -135,7 +135,7 @@ body::before {
   left: 50%;
   width: 900px;
   height: 900px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 90%);
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 18%, transparent) 0%, transparent 70%);
   filter: blur(120px);
   transform: translate(-50%, -50%);
   pointer-events: none;
