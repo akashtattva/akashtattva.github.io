@@ -8,7 +8,7 @@ Purified OPSD Notes
 
 This paper is about a very specific failure in training reasoning language models. The authors study on-policy self-distillation, called OPSD, for models that use long chain-of-thought reasoning. The main point is that ordinary OPSD looks promising because it lets a model learn from its own generated attempts while a stronger or privileged version of the model gives token-level feedback. But for long reasoning models, the paper finds that this setup can quietly damage the very behavior that makes these models good at reasoning. Instead of improving the model's ability to think through a problem, standard OPSD often teaches it to imitate reference-specific shortcuts.
 
-The Central Problem
+# The Central Problem
 
 Long chain-of-thought models do not just output short answers. They often spend many tokens exploring a problem, checking assumptions, changing direction, and correcting themselves. This reflective process matters because the model usually does not know the answer immediately. It has to search through possible paths. Standard OPSD gives the teacher access to the reference solution while the student does not have that reference at test time. That sounds helpful because the teacher can tell the student which next tokens are better. The problem is that the teacher has privileged information. Since the teacher already sees the reference solution, it may no longer behave like a model that needs to reason. It may push the student toward tokens that match the reference answer path, even when those tokens are not useful signals for independent problem solving.
 
