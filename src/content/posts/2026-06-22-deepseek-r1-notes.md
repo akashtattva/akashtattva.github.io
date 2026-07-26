@@ -17,15 +17,15 @@ Over roughly 10,000 training steps, the model went from scoring 15.6 percent on 
 
 DeepSeek-R1 was built to fix these problems through a multi-stage pipeline. First, the researchers collected a small amount of cold-start data by taking some of DeepSeek-R1-Zeros outputs and having humans rewrite them into cleaner, more readable reasoning traces. They fine-tuned the base model on this data. Then they ran reinforcement learning again, but this time they added a language consistency reward to reduce language mixing. They then did a second round of supervised fine-tuning using 800,000 examples where correct reasoning trajectories were sampled from the model and filtered. Finally, they ran a second reinforcement learning stage that combined rule-based rewards for reasoning tasks with reward models trained on human preferences for general tasks like writing. This pipeline produced a model that could reason as well as DeepSeek-R1-Zero but was also readable, helpful, and safe.
 
-How GRPO Works
+## How GRPO Works
 
 The reinforcement learning algorithm used is Group Relative Policy Optimization. Instead of training a separate value model to estimate how good each partial response is, which is the standard approach in PPO, GRPO samples a group of responses for each question and normalizes their rewards within the group to compute advantages. This is simpler and uses less memory because it does not need a separate value model. In PPO, you need a value model roughly the size of the main model just to estimate how good each token is, which doubles memory requirements. GRPO avoids this by using the average reward of the group as a baseline. The researchers found that GRPO performed comparably to a carefully tuned PPO but was easier to use and more stable.
 
-Why They Skipped Supervised Fine-Tuning for R1-Zero
+## Why They Skipped Supervised Fine-Tuning for R1-Zero
 
 The conventional approach to training reasoning models starts with supervised fine-tuning on human-written reasoning examples and then does reinforcement learning. The researchers deliberately skipped the supervised fine-tuning step for DeepSeek-R1-Zero because they hypothesized that human reasoning examples might actually limit what the model could learn. Human reasoning has biases and blind spots. By letting the model explore freely without imitating humans, they hoped it would discover reasoning strategies that are better than human reasoning. This turned out to be correct: the model developed strategies like systematic self-verification that humans do not naturally use when solving problems.
 
-The Distillation Results Are Surprising
+## The Distillation Results Are Surprising
 
 One of the most practically important results in the paper is that distilling DeepSeek-R1s outputs into small models works extremely well. DeepSeek-R1-Distill-Qwen-1.5B, a model with only 1.5 billion parameters, scored 28.9 percent on AIME 2024. This beats GPT-4o, which has many orders of magnitude more parameters and scored only 9.3 percent. A 7 billion parameter distilled model scored 55.5 percent, approaching the performance of much larger models. This matters because it means the reasoning capabilities of a huge model can be compressed into small models that run on consumer hardware. The paper also shows that distilling from DeepSeek-R1 works better than running reinforcement learning directly on the smaller model, despite the latter requiring far more compute. This suggests that the teacher model discovers reasoning patterns during its large-scale RL training that the small model cannot discover on its own but can learn through imitation.
 

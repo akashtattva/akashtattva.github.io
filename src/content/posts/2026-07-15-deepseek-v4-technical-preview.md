@@ -1,8 +1,8 @@
 ---
-title: "DeepSeek-V4 Technical Preview Notes"
+title: "DeepsSeek - V4 Notes"
 pubDate: 2026-07-15
-tags: ["deepseek", "llm", "paper-notes"]
 ---
+
 
 What this paper is about
 

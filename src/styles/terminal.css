@@ -96,21 +96,6 @@ h6 {
   line-height: 1.2;
 }
 
-/* Subtle radial gradient for a soft glow effect */
-body::before {
-  content: "";
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 900px;
-  height: 900px;
-  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 70%);
-  filter: blur(120px);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
 body {
   position: relative;
   z-index: 1;
