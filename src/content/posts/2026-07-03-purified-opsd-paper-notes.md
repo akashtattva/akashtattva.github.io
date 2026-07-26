@@ -14,6 +14,10 @@ Long chain-of-thought models do not just output short answers. They often spend 
 
 The paper argues that this mismatch is especially harmful for long-CoT models. These models depend on reflective reasoning patterns, such as pausing, reconsidering, and checking their own work. If training pushes them too directly toward the reference, it can erase or distort those patterns. The model may become less able to explore. It may also overproduce shallow reflection words without doing real reflection. In both cases, the model loses the natural reasoning behavior it had before training.
 
+![Figure 1: OPSD degrades long-CoT reasoning models](/assets/img/popsd_fig1_opsd_fails.png)
+
+*Figure 1 shows AIME 2025 accuracy across OPSD training checkpoints on Math-CoT-20K. OPSD provides at best marginal, short-lived gains, and often degrades performance on long-CoT models.*
+
 What OPSD Is Supposed To Do
 
 In on-policy self-distillation, the student model generates its own reasoning trajectory for a question. This is important because the student trains on the kinds of states it actually visits, rather than only copying traces produced by another model. After the student generates a partial answer, a teacher distribution gives token-level guidance. In this paper's setting, the teacher is privileged because it sees the question and the reference solution. The training objective then tries to make the student distribution closer to the teacher distribution at each token position, using a Jensen-Shannon divergence style loss.
@@ -34,6 +38,10 @@ The results show strange behavior under standard OPSD. For Qwen3-8B, epistemic m
 
 The paper connects these marker changes to performance degradation. If a model stops using reflective moves, it may stop checking itself. If it repeats one marker too much, it may imitate the surface form of thinking without doing useful reasoning. The key idea is that long-CoT performance depends not only on final answers but also on the structure of the reasoning process. Standard OPSD appears to disturb that structure.
 
+![Figure 2: Epistemic marker analysis during OPSD](/assets/img/popsd_fig2_epistemic_markers.png)
+
+*Figure 2 shows that under standard OPSD, Qwen3-8B's epistemic markers collapse uniformly, while R1-Distill-Qwen-7B's explode with the increase concentrated on "Wait". Both patterns are pathological and correlate with performance degradation.*
+
 The Teacher Signal Decomposition
 
 The most important technical idea in the paper is a decomposition of the teacher's supervision signal. The authors compare three distributions. The first is the current student distribution, which predicts the next token from the question and the student's generated prefix. The second is the normal privileged teacher distribution, which sees the question, the generated prefix, and the reference solution. The third is a reference-only teacher distribution, which sees the generated prefix and the reference solution but not the question.
@@ -49,6 +57,10 @@ The decomposition shows that the reference-induced component dominates standard 
 This is a strong diagnosis. If OPSD were working as intended, the total update should mostly align with the inference-transferable residual. That would mean the teacher is helping the student learn what is useful for solving the problem. Instead, the update mostly aligns with the reference-induced component. This means the teacher is mostly pulling the student toward information that comes from the reference solution, not toward independent reasoning that will be available at test time.
 
 The paper also observes a training dynamic. Early in training, the reference-induced component is very strong. Later, after the model has absorbed some of that reference-driven signal, the inference-transferable component becomes more visible. But by then the model's reasoning behavior may already be damaged. The later recovery of the useful signal does not rescue performance. This supports the idea that early reference memorization can destabilize the model in a way that ordinary continued training does not fix.
+
+![Figure 3: Decomposition of the teacher's update signal](/assets/img/popsd_fig3_teacher_decomp.png)
+
+*Figure 3 decomposes the teacher's update into reference-induced (red) and inference-transferable (green) components. The reference component dominates in both direction (cosine similarity, left) and magnitude (norm fraction, right), confirming the diagnosis.*
 
 The Intuition Behind Purified OPSD
 
@@ -88,17 +100,33 @@ The main results compare the base model, standard OPSD, and OPSD-PMI across four
 
 OPSD-PMI improves over the base model in every listed model-dataset combination. It also consistently beats standard OPSD. The gains are not limited to one architecture or one dataset, which supports the claim that reference-induced shortcut learning is a general bottleneck for standard OPSD on long-CoT models. The method is also more stable across training checkpoints. Standard OPSD may briefly peak and then decline, making early stopping important. OPSD-PMI stays above the baseline more reliably, which is practically valuable because it reduces dependence on lucky checkpoint selection.
 
+![Table 1 & Figure 4: Main results and training dynamics](/assets/img/popsd_table1_main_results.png)
+
+*Table 1 (top) shows OPSD-PMI consistently improves over both the base model and OPSD-Standard across all four models and both datasets.*
+
+![Figure 4: Training dynamics on Math-CoT-20K](/assets/img/popsd_fig4_training_dynamics.png)
+
+*Figure 4 compares training dynamics: OPSD-Standard (red) degrades progressively, while OPSD-PMI (green) remains stably above the baseline (dashed) throughout training.*
+
 Preserving Reflective Reasoning
 
 The paper returns to epistemic markers after introducing OPSD-PMI. This is important because higher benchmark scores alone would not prove that the model's reasoning style is preserved. The authors compare standard OPSD and OPSD-PMI on Qwen3-8B and R1-Distill-7B. Under standard OPSD, Qwen3-8B's epistemic marker count collapses, while R1-Distill-7B's count explodes. Under OPSD-PMI, the counts stay near the base model's levels.
 
 The per-marker distribution also stays healthier. Standard OPSD suppresses many markers in Qwen3-8B and overconcentrates on "Wait" in R1-Distill-7B. OPSD-PMI keeps the distribution much closer to the base model. The paper interprets this as evidence that the purified target improves accuracy without disrupting the model's natural reflective behavior. This is a central claim: the method does not merely teach the model to get more answers right; it does so while preserving the process-like behavior that long-CoT models rely on.
 
+![Figure 5: Epistemic markers preserved under OPSD-PMI](/assets/img/popsd_fig5_markers_and_fig6_ablations.png)
+
+*Figure 5 shows epistemic marker analysis on Math-CoT-20K. OPSD-Standard causes pathological collapse or explosion, while OPSD-PMI (Ours) remains stable at baseline levels and preserves the per-marker distribution.*
+
 Ablation Results
 
 The ablations study two hyperparameters: the clipping threshold c and the correction strength beta. For c, the paper tests values such as five, ten, and twenty. All settings improve over baseline and standard OPSD. The threshold mostly acts as a numerical safety device. If it is too small, it may compress useful differences too aggressively and make training a little more volatile, but the method remains effective.
 
 For beta, the paper tests values such as 0.5, 1, and 2. All improve over the base model and standard OPSD, but their dynamics differ. A smaller beta applies a stronger correction and can be more volatile. A larger beta keeps the target closer to the base distribution and can produce smoother curves, sometimes with strong peaks. The paper uses beta equal to one as a simple balanced default. The larger message is that the method is not extremely fragile to these hyperparameters.
+
+![Figure 6 & 7: Ablation on clipping threshold and correction strength](/assets/img/popsd_fig7_ablation_beta.png)
+
+*Figure 6 (clipping threshold c): all settings consistently improve over the baseline. Figure 7 (correction strength β): β=0.5 is more volatile, β=2 yields smoother curves, β=1 balances stability and performance.*
 
 How This Paper Relates To Prior Work
 
