@@ -7,7 +7,7 @@ const MAX_WIDTH = 800;
 const QUALITY = 80;
 
 async function main() {
-  const files = readdirSync(IMG_DIR).filter(f => f.endsWith('.png'));
+  const files = readdirSync(IMG_DIR).filter(f => f.endsWith('.png') || f.endsWith('.jpg') || f.endsWith('.jpeg'));
   let converted = 0;
   let skipped = 0;
 
