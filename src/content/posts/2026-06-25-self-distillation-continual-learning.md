@@ -1,28 +1,28 @@
----
+﻿---
 title: "Self-Distillation Enables Continual Learning"
 pubDate: 2026-06-25
 tags: ["continual-learning", "self-distillation", "paper-notes"]
 ---
 
-# Self-Distillation Enables Continual Learning — Detailed Notes
+## Self-Distillation Enables Continual Learning â€” Detailed Notes
 
 ## The Problem: Catastrophic Forgetting
 
-When you teach a neural network something new, it tends to erase what it already knew. This is called catastrophic forgetting. If you train a language model to be good at answering medical questions, it might suddenly become bad at writing code or answering science questions. Humans do not work this way — we can learn new skills without forgetting old ones. This paper tries to bridge that gap.
+When you teach a neural network something new, it tends to erase what it already knew. This is called catastrophic forgetting. If you train a language model to be good at answering medical questions, it might suddenly become bad at writing code or answering science questions. Humans do not work this way â€” we can learn new skills without forgetting old ones. This paper tries to bridge that gap.
 
 The standard way to teach a model from examples is called Supervised Fine-Tuning or SFT. You gather a bunch of question-answer pairs and train the model to produce those exact answers. The trouble is that SFT is what the paper calls off-policy. Off-policy means the model is learning from data that was produced by someone else, not by the model itself. This creates a mismatch. The model sees examples of perfect expert behavior during training, but when it has to generate its own answers at test time, it makes small mistakes, drifts into unfamiliar territory, and those errors compound. In a continual learning setting where you train on one task after another, this mismatch causes the model to overwrite its old knowledge with the new task's patterns.
 
-On-policy learning is the alternative. Here, the model learns from its own generated outputs. This works much better for continual learning because the model trains on the kinds of trajectories it actually produces, so there is no mismatch. The catch is that on-policy learning traditionally needs a reward function to tell the model whether its outputs are good or bad. In many real-world situations, you do not have a reward function. You only have a collection of expert demonstrations — someone showed the model how to do the task correctly, but you cannot assign a numeric score to every possible output.
+On-policy learning is the alternative. Here, the model learns from its own generated outputs. This works much better for continual learning because the model trains on the kinds of trajectories it actually produces, so there is no mismatch. The catch is that on-policy learning traditionally needs a reward function to tell the model whether its outputs are good or bad. In many real-world situations, you do not have a reward function. You only have a collection of expert demonstrations â€” someone showed the model how to do the task correctly, but you cannot assign a numeric score to every possible output.
 
 ## The Core Idea: Self-Distillation Fine-Tuning (SDFT)
 
 The paper introduces a method called Self-Distillation Fine-Tuning. The idea is to get the benefits of on-policy learning without needing a reward function, using only expert demonstrations. The method relies on a clever observation about how large language models work.
 
-Large language models have a property called in-context learning. If you give them an example in the prompt, they can follow that example to produce a similar kind of output. You have seen this yourself if you have ever used ChatGPT — you give it an example of what you want, and it figures out the pattern. Crucially, the model can do this without any parameter updates. It just uses the example as context.
+Large language models have a property called in-context learning. If you give them an example in the prompt, they can follow that example to produce a similar kind of output. You have seen this yourself if you have ever used ChatGPT â€” you give it an example of what you want, and it figures out the pattern. Crucially, the model can do this without any parameter updates. It just uses the example as context.
 
 SDFT exploits this by using the same model in two different roles. In the teacher role, the model is given both the question and an expert demonstration in its prompt. In the student role, the model is given only the question, without the demonstration. The teacher, having seen the example, produces a better, more informed output distribution. The student produces whatever the base model would naturally output.
 
-The training process works like this. For each question, the student generates a response on its own. Then the teacher (which is the same model with the demonstration added to the prompt) computes what probabilities it would assign to each token in that response. The student is then trained to make its own probabilities match the teacher's probabilities. This is called distillation — you are distilling the knowledge from the teacher into the student.
+The training process works like this. For each question, the student generates a response on its own. Then the teacher (which is the same model with the demonstration added to the prompt) computes what probabilities it would assign to each token in that response. The student is then trained to make its own probabilities match the teacher's probabilities. This is called distillation â€” you are distilling the knowledge from the teacher into the student.
 
 The key detail is that the student trains on its own self-generated responses, not on the demonstration data directly. This makes the training on-policy. The student learns from trajectories it actually produces, avoiding the mismatch problem that plagues SFT.
 
@@ -30,17 +30,17 @@ The key detail is that the student trains on its own self-generated responses, n
 
 The method depends on a specific assumption. The paper calls it the In-Context Learning Assumption. It says that when you condition the model on an expert demonstration, the model's output distribution approximates what the optimal policy for that task would look like. In other words, seeing the example nudges the model toward correct behavior without distorting its overall distribution too much.
 
-This assumption has two parts. First, the teacher must actually produce good outputs. The paper validates this empirically — on the ToolAlpaca benchmark, the base model scores 42 percent, but the demonstration-conditioned teacher scores 100 percent. The teacher is not just copying the example verbatim; it is genuinely understanding the intent and producing correct responses.
+This assumption has two parts. First, the teacher must actually produce good outputs. The paper validates this empirically â€” on the ToolAlpaca benchmark, the base model scores 42 percent, but the demonstration-conditioned teacher scores 100 percent. The teacher is not just copying the example verbatim; it is genuinely understanding the intent and producing correct responses.
 
 Second, the teacher must stay close to the base model's distribution. If the teacher diverges too much, the student will be trained to match a distribution very different from its own, and you lose the benefits of on-policy learning. The paper measures this too. The KL divergence (a measure of distribution difference) from the base model is 0.68 nats for the demonstration-conditioned teacher, compared to 1.26 nats for a model trained with standard SFT. So the teacher is nearly twice as close to the base model as an SFT model would be.
 
-This proximity matters because prior research has shown that distributions close to the pretrained distribution suffer less catastrophic forgetting. The teacher gives you the best of both worlds — it is highly accurate on the task but stays anchored to the base model's natural behavior.
+This proximity matters because prior research has shown that distributions close to the pretrained distribution suffer less catastrophic forgetting. The teacher gives you the best of both worlds â€” it is highly accurate on the task but stays anchored to the base model's natural behavior.
 
 ## The Mathematical Perspective: Connection to Inverse Reinforcement Learning
 
 The paper also shows that SDFT can be understood through the lens of Inverse Reinforcement Learning or IRL. In IRL, you try to infer the reward function that the expert was optimizing, and then you use that reward to do on-policy reinforcement learning. This is theoretically elegant but practically difficult because inferring rewards from demonstrations is hard and requires strong assumptions about the structure of the reward.
 
-SDFT sidesteps this by deriving an implicit reward function directly from the model's own in-context learning behavior. The reward for a particular output is defined as the log-probability ratio between the teacher and the student. If the teacher assigns much higher probability to a token than the student does, that token gets a positive reward — the teacher is saying this is a good choice. If the teacher assigns lower probability, the reward is negative.
+SDFT sidesteps this by deriving an implicit reward function directly from the model's own in-context learning behavior. The reward for a particular output is defined as the log-probability ratio between the teacher and the student. If the teacher assigns much higher probability to a token than the student does, that token gets a positive reward â€” the teacher is saying this is a good choice. If the teacher assigns lower probability, the reward is negative.
 
 The paper proves mathematically that optimizing the policy with respect to this implicit reward is equivalent to minimizing the reverse KL divergence between the student and teacher distributions. So SDFT is essentially doing on-policy RL with a reward that emerges naturally from the model's ability to learn from examples in its context.
 
@@ -48,7 +48,7 @@ The paper proves mathematically that optimizing the policy with respect to this 
 
 The paper tests SDFT in two main settings. The first is skill learning, where the model already has some general capability and needs to improve on a specific task. The three tasks are Science Q&A (undergraduate chemistry questions), Tool Use (mapping API specifications to correct tool calls), and Medical (clinical reasoning questions).
 
-The second setting is knowledge acquisition. Here the goal is not to improve an existing skill but to inject genuinely new factual information into the model. The paper uses Wikipedia articles about natural disasters that happened in 2025 — after the model's training cutoff, so the model has zero knowledge of them. The model must learn facts about events like the 2025 Myanmar earthquake and answer questions about them.
+The second setting is knowledge acquisition. Here the goal is not to improve an existing skill but to inject genuinely new factual information into the model. The paper uses Wikipedia articles about natural disasters that happened in 2025 â€” after the model's training cutoff, so the model has zero knowledge of them. The model must learn facts about events like the 2025 Myanmar earthquake and answer questions about them.
 
 For each setting, the paper measures two things. First, how well does the model perform on the new task? Second, how much does it forget about its prior capabilities? Prior capabilities are measured using a suite of standard benchmarks covering reasoning, world knowledge, instruction following, and code generation.
 
@@ -58,7 +58,7 @@ In the knowledge acquisition setting, SDFT achieves 89 percent strict accuracy c
 
 ## The Sequential Learning Experiment
 
-The most impressive result in the paper is the sequential learning experiment. A single model is trained on all three skills one after the other — first Tool Use, then Science Q&A, then Medical. With SDFT, the model steadily improves on each new task while maintaining performance on the previously learned ones. The normalized performance curves stay flat or rising across all three tasks throughout training.
+The most impressive result in the paper is the sequential learning experiment. A single model is trained on all three skills one after the other â€” first Tool Use, then Science Q&A, then Medical. With SDFT, the model steadily improves on each new task while maintaining performance on the previously learned ones. The normalized performance curves stay flat or rising across all three tasks throughout training.
 
 With SFT, the picture is completely different. Performance on each task spikes during its training phase and then collapses when the next task begins. The curves oscillate wildly. By the end, the model has not accumulated all three skills; it has mostly learned the last task and forgotten the earlier ones.
 
@@ -98,7 +98,7 @@ The teacher is always conditioned on demonstrations, but its weights can be defi
 
 ## Limitations and Failure Modes
 
-SDFT is not a silver bullet. The paper discusses several limitations. First, it costs more than SFT — roughly 2.5 times the FLOPs and 4 times the wall-clock time because the model has to generate on-policy rollouts during training. However, the paper argues that this is competitive with methods that require multiple training stages (like SFT followed by a restoration phase).
+SDFT is not a silver bullet. The paper discusses several limitations. First, it costs more than SFT â€” roughly 2.5 times the FLOPs and 4 times the wall-clock time because the model has to generate on-policy rollouts during training. However, the paper argues that this is competitive with methods that require multiple training stages (like SFT followed by a restoration phase).
 
 Second, SDFT depends heavily on the model's in-context learning ability. Small models with weak ICL do not benefit. The paper shows this explicitly in a scaling experiment. At 3 billion parameters, SDFT actually underperforms SFT. At 7 billion, it pulls ahead by 4 points. At 14 billion, the gap widens to 7 points. As models grow larger and their ICL capabilities improve, SDFT becomes more advantageous.
 
@@ -108,22 +108,22 @@ Fourth, SDFT cannot handle fundamental behavioral shifts. If you want to transfo
 
 ## Chase Questions
 
-### What was the research trying to make possible?
+## What was the research trying to make possible?
 
-The research was trying to make it possible for AI models to keep learning new things over time without forgetting what they already know, using only the kinds of data that are available in real-world settings — expert demonstrations without reward functions. Foundation models today are static after deployment. They cannot update their parameters to acquire new skills or internalize new facts. This paper attempts to unlock continual learning from demonstrations, which is the most practical data format available.
+The research was trying to make it possible for AI models to keep learning new things over time without forgetting what they already know, using only the kinds of data that are available in real-world settings â€” expert demonstrations without reward functions. Foundation models today are static after deployment. They cannot update their parameters to acquire new skills or internalize new facts. This paper attempts to unlock continual learning from demonstrations, which is the most practical data format available.
 
-### What assumption does it quietly depend on?
+## What assumption does it quietly depend on?
 
-The entire method depends on the assumption that a model conditioned on an expert demonstration produces an output distribution that approximates the optimal policy for that task while staying close to the base model's distribution. This is the In-Context Learning Assumption from Section 3.2. The paper validates it empirically but does not prove it theoretically. If this assumption fails — for example, if the model cannot understand the demonstration, or if the demonstration causes the model to output something completely different from its natural distribution — SDFT would not work. The method also quietly assumes that the base model already has strong enough in-context learning abilities to act as a useful teacher, which is not true for smaller models.
+The entire method depends on the assumption that a model conditioned on an expert demonstration produces an output distribution that approximates the optimal policy for that task while staying close to the base model's distribution. This is the In-Context Learning Assumption from Section 3.2. The paper validates it empirically but does not prove it theoretically. If this assumption fails â€” for example, if the model cannot understand the demonstration, or if the demonstration causes the model to output something completely different from its natural distribution â€” SDFT would not work. The method also quietly assumes that the base model already has strong enough in-context learning abilities to act as a useful teacher, which is not true for smaller models.
 
-### What becomes obvious after reading it that was not obvious before?
+## What becomes obvious after reading it that was not obvious before?
 
-What becomes obvious is that the model's own in-context learning ability is a latent resource that can be repurposed for training without any external supervision. The paper reveals that a model can serve as its own teacher by simply looking at an example in its prompt. This means the gap between off-policy and on-policy learning can be bridged without reward engineering or inverse reinforcement learning. The other thing that becomes obvious is that on-policy learning is not just about preventing forgetting — it also produces better generalization and higher accuracy on the task itself. The paper shows this consistently across multiple settings.
+What becomes obvious is that the model's own in-context learning ability is a latent resource that can be repurposed for training without any external supervision. The paper reveals that a model can serve as its own teacher by simply looking at an example in its prompt. This means the gap between off-policy and on-policy learning can be bridged without reward engineering or inverse reinforcement learning. The other thing that becomes obvious is that on-policy learning is not just about preventing forgetting â€” it also produces better generalization and higher accuracy on the task itself. The paper shows this consistently across multiple settings.
 
-### Where does the idea break if you push it outside the paper?
+## Where does the idea break if you push it outside the paper?
 
-The idea breaks in several places. If you apply it to a small model, it does not just degrade gracefully — it actively underperforms SFT. If you try to change the model's fundamental behavior (like turning a non-reasoning model into a chain-of-thought model), it fails because the teacher cannot demonstrate behavior the base model does not already produce. If you have noisy or suboptimal demonstrations, the teacher would inherit that noise, and the student would learn bad patterns. The paper explicitly does not test this scenario. If you need to learn hundreds or thousands of tasks sequentially, it is unclear whether the small residual forgetting observed in the paper would accumulate and eventually become catastrophic. The paper only tests three tasks.
+The idea breaks in several places. If you apply it to a small model, it does not just degrade gracefully â€” it actively underperforms SFT. If you try to change the model's fundamental behavior (like turning a non-reasoning model into a chain-of-thought model), it fails because the teacher cannot demonstrate behavior the base model does not already produce. If you have noisy or suboptimal demonstrations, the teacher would inherit that noise, and the student would learn bad patterns. The paper explicitly does not test this scenario. If you need to learn hundreds or thousands of tasks sequentially, it is unclear whether the small residual forgetting observed in the paper would accumulate and eventually become catastrophic. The paper only tests three tasks.
 
-### What long-running problem did this paper move, even slightly?
+## What long-running problem did this paper move, even slightly?
 
 The paper moved the problem of continual learning from demonstrations. Before this work, the evidence for on-policy learning reducing forgetting came mostly from reinforcement learning settings where reward functions were available. This paper showed that the same benefits can be obtained from demonstrations alone, using a simple and practical method. It also connected on-policy distillation to inverse reinforcement learning in a theoretically grounded way, showing that an implicit reward can be derived from in-context learning. While SDFT is not the final solution to continual learning, it established that on-policy distillation from demonstrations is a viable path, which opens the door to combining it with other techniques like experience replay or regularization-based methods to further reduce the remaining forgetting.

@@ -1,9 +1,9 @@
----
+﻿---
 title: "CaMeL: Computer Use Agents"
 pubDate: 2026-06-22
 ---
 
-# Detailed Notes on "Camels Can Use Computers Too: System-Level Security for Computer Use Agents"
+## Detailed Notes on "Camels Can Use Computers Too: System-Level Security for Computer Use Agents"
 
 ## What This Paper Is About
 
@@ -63,22 +63,22 @@ This paper moved the problem of securing AI agents from a purely reactive defens
 
 ## Chasing Questions
 
-### What was the research trying to make possible?
+## What was the research trying to make possible?
 
 The research was trying to make it possible for Computer Use Agents, which are AI systems that automate tasks by looking at screens and clicking around, to be secure against prompt injection attacks while remaining practically useful. Before this work, people thought you had to choose between having a secure but useless agent or a useful but insecure one. The researchers wanted to prove that architectural isolation, where the planner never sees untrusted content, could work even for the visually dynamic and unpredictable world of computer screens. They wanted to show that the structure of computer use tasks is predictable enough that a blind planner can still produce working plans by anticipating possible states in advance.
 
-### What assumption does it quietly depend on?
+## What assumption does it quietly depend on?
 
 The approach quietly depends on the assumption that the planner can predict the branching structure of the task accurately enough at plan time. It assumes that most computer use tasks follow predictable patterns where the possible states the computer could be in at each step are enumerable in advance. This is true for common tasks like web browsing, form filling, and document editing, but it may not hold for truly open ended tasks, creative exploration, debugging, or any scenario where the next step depends on specific unexpected visual content. The approach also assumes that the perception model, even though it is quarantined, can be trusted to provide accurate information on demand. If the perception model is compromised through Branch Steering or other data flow attacks, the control flow guarantees alone are not enough to prevent harm.
 
-### What becomes obvious after reading it that was not obvious before?
+## What becomes obvious after reading it that was not obvious before?
 
 It becomes obvious that computer use tasks are much more predictable than they appear. Watching an AI agent interact with a computer looks like continuous real time adaptation, but the underlying structure is highly stereotyped. Opening a browser, handling cookie popups, finding search bars, navigating menus, and extracting information all follow repeatable patterns that can be anticipated and encoded. This means the perceived need for continuous visual feedback is partly an artifact of how current agents are trained rather than a fundamental requirement of the task. Once you see the workflow broken down into its predictable components, it becomes obvious that single shot planning with verification checkpoints is a natural fit for most computer use tasks.
 
-### Where does the idea break if you push it outside the paper?
+## Where does the idea break if you push it outside the paper?
 
 The idea breaks when tasks require genuine visual discovery that cannot be anticipated, like finding and fixing an unknown error message or browsing a website to pick the best looking option. It breaks for tasks with deep navigation where the number of potential states explodes combinatorially, making it impossible for the planner to enumerate all branches. It breaks when the task description is underspecified and the agent needs to explore to figure out what to do. And it breaks against Branch Steering attacks where the perception model is tricked into following dangerous paths within the legitimate plan. As language models become more capable, the perception vulnerabilities may actually become harder to defend against, not easier, because the attacks can be more subtle and harder to detect.
 
-### What long running problem did this paper move, even slightly?
+## What long running problem did this paper move, even slightly?
 
 This paper moved the problem of AI agent security from a reactive detection based paradigm to a proactive architectural one. Prior work tried to recognize attacks after they occurred through pattern recognition, monitoring, and rules. This approach is inherently fragile because attackers can always find novel ways around the detection. This paper showed that architectural isolation, specifically the Dual-LLM pattern, can be adapted to Computer Use Agents, making entire attack classes structurally impossible rather than merely detectable. This shifts the conversation from how to spot attacks to how to design systems that cannot fall for them in the first place. The paper also moved the problem of understanding task structure by demonstrating that seemingly dynamic visual environments have predictable workflows, which opens up new possibilities for secure automation across many domains.

@@ -1,13 +1,13 @@
----
+﻿---
 title: "Process Reward Model in RL Training"
 pubDate: 2025-10-09
 ---
 
-# Process reward model in RL training process
+## Process reward model in RL training process
 
 *Deepseek R1 technical report (diagram from the original paper)*
 
-### What is a Process Reward Model (PRM) in RL training?
+## What is a Process Reward Model (PRM) in RL training?
 
 In RL training, a Reward Model method is used to tell the AI how well it's doing.
 

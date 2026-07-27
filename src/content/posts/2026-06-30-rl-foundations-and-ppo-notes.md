@@ -1,10 +1,10 @@
----
+﻿---
 title: "RL Foundations and PPO Notes"
 pubDate: 2026-06-30
 tags: ["reinforcement-learning", "ppo", "notes"]
 ---
 
-# RL Foundations and PPO Notes
+## RL Foundations and PPO Notes
 
 ## Why reinforcement learning is used after supervised fine tuning
 

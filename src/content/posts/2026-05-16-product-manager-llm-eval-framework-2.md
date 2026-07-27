@@ -1,4 +1,4 @@
----
+﻿---
 title: Updated - Every Product Manager should have a personal LLM Eval Framework
 pubDate: 2026-05-16
 ---
@@ -13,13 +13,13 @@ So the PM eval has to grow up a little. The prompt alone is too small. The workf
 
 Engineering still owns formal benchmarks, regression tests, load testing, and safety reviews. Your job as a PM or designer is different. You need a lightweight way to answer a product question:
 
-Does this upgrade make the product better for the people using it?
+## Does this upgrade make the product better for the people using it?
 
 Here is the framework I would use now.
 
 ---
 
-1. Build a Golden Workflow Set
+## 1. Build a Golden Workflow Set
 
 Do not start with random prompts. Start with the jobs users actually come to your product to finish.
 
@@ -50,7 +50,7 @@ The important detail: save the whole scenario. A prompt alone is often missing t
 
 ---
 
-2. Compare Configurations, Not Model Names
+## 2. Compare Configurations, Not Model Names
 
 The challenger is rarely just a new model now.
 
@@ -74,7 +74,7 @@ This sounds fussy until you hit the first confusing result. A model looked great
 
 ---
 
-3. Decide What Better Means
+## 3. Decide What Better Means
 
 Do this before you run the cases.
 
@@ -110,7 +110,7 @@ A challenger can win most cases and still be blocked by one P0. That is product 
 
 ---
 
-4. Capture the Trace and the Answer
+## 4. Capture the Trace and the Answer
 
 Side-by-side review is still a good habit. Put the baseline on the left, the challenger on the right, and run the same case through both.
 
@@ -135,7 +135,7 @@ For workflows with randomness, run the same case more than once. The best answer
 
 ---
 
-5. Review Blind, Then Review the Path
+## 5. Review Blind, Then Review the Path
 
 The blind review trick still works.
 
@@ -154,7 +154,7 @@ This is the biggest change from the older version of the framework. The question
 
 ---
 
-6. Give Engineers a Release Decision
+## 6. Give Engineers a Release Decision
 
 Avoid vague feedback like the new model seems better. Give a decision the team can act on.
 
@@ -177,7 +177,7 @@ Much more useful than a vibes-based yes.
 
 ---
 
-7. Keep the Suite Alive
+## 7. Keep the Suite Alive
 
 The suite should change when the product changes.
 
