@@ -5,9 +5,7 @@ pubDate: 2025-10-09
 
 # Process reward model in RL training process
 
-![Deepseek R1 technical report](/assets/img/image_1.png)
-
-Deepseek R1 technical report
+*Deepseek R1 technical report (diagram from the original paper)*
 
 ### What is a Process Reward Model (PRM) in RL training?
 

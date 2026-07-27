@@ -14,7 +14,7 @@ Reinforcement Learning with Verifiable Rewards versus Reinforcement Learning wit
 
 The paper distinguishes between two settings. The first is Reinforcement Learning with Verifiable Rewards, abbreviated as RLVR, which is the dominant approach used today. In RLVR, the model generates an answer, the environment evaluates it, and the model receives a scalar reward such as zero or one indicating correctness. This is like a teacher handing back a test with just a checkmark or X, without any comments explaining the reasoning. The second setting is what the authors call Reinforcement Learning with Rich Feedback, or RLRF. In RLRF, the environment provides tokenized feedback, meaning text-based information about what went wrong. For example, instead of just getting a zero for a wrong answer, the model might see a runtime error message like "ZeroDivisionError: division by zero at line 73" or a detailed explanation of which test cases failed and why. The paper argues that RLVR creates an information bottleneck because the scalar reward masks the underlying state of the environment. When all attempts in a group receive the same reward, typically zero, the learning signal collapses to nothing and training stalls. RLRF removes this bottleneck by providing the model with detailed, interpretable information about each attempt, enabling the model to learn not just that it was wrong, but specifically what was wrong and how to fix it.
 
-![Figure 2: Comparison of RLVR and RLRF settings](/assets/img/fig2_rlvr_vs_rlrf_and_fig3_feedback.png)
+![Figure 2: Comparison of RLVR and RLRF settings](/assets/img/fig2_rlvr_vs_rlrf_and_fig3_feedback.webp)
 
 *Figure 2 illustrates the difference between RLVR (scalar reward bottleneck) and RLRF (rich feedback). The same page also shows Figure 3 with an example of LeetCode-style code execution feedback (runtime errors, failed test cases).*
 
@@ -22,7 +22,7 @@ The Self-Teacher Mechanism
 
 The key innovation of SDPO is the self-teacher mechanism. When the model generates a response to a question, it first acts as the student. After receiving feedback from the environment, the model is re-prompted with both the original question and the feedback, and it now acts as the teacher. The teacher sees the feedback in its context, which transforms its next-token probability distribution. Because the teacher has this extra information, it can agree or disagree with the student's original choices at specific token positions. For instance, if the student produced code that caused a division by zero error, the teacher, seeing that error message, might assign a very different probability to the token that caused the error compared to the student. The teacher then compares its own predictions to the student's predictions at every token position. If the teacher thinks a particular token should have been different, that token gets a negative advantage, meaning the model should stop doing that. If the teacher agrees with the student's token, that token gets a positive advantage, meaning the model should continue doing that. This produces a dense, per-token credit assignment signal that tells the model exactly where and how its response was wrong. Crucially, this mechanism has no sampling overhead because the system simply re-computes the log-probabilities of the original attempt under the teacher's feedback-augmented context.
 
-![Figure 4: Example of self-teaching with Qwen3-8B](/assets/img/fig4_self_teaching.png)
+![Figure 4: Example of self-teaching with Qwen3-8B](/assets/img/fig4_self_teaching.webp)
 
 *Figure 4 shows the self-teacher mechanism in action: the model first generates an answer, then re-evaluates log-probs of the original attempt after seeing feedback. Blue tokens receive positive advantage (teacher agrees), red tokens receive negative advantage (teacher disagrees).*
 
@@ -38,7 +38,7 @@ Compute Time and Memory Overhead
 
 The paper addresses practical concerns about the computational cost of SDPO. The only additional computation compared to GRPO is computing the log-probabilities from the self-teacher, which can be parallelized and is substantially faster than generating new responses. The paper shows that SDPO adds only about 5.8 percent to 17.1 percent compute overhead compared to GRPO, depending on whether a code execution environment is involved. To handle memory concerns, SDPO uses top-K distillation, where it only computes the top-K most likely tokens under the student and the corresponding probabilities under the teacher, along with a tail probability term capturing the remaining tokens. With a reasonable choice of K, such as K=100, this avoids virtually any memory overhead while capturing most of the information.
 
-![Figure 5: Time per step comparison](/assets/img/fig5_compute_overhead.png)
+![Figure 5: Time per step comparison](/assets/img/fig5_compute_overhead.webp)
 
 *Figure 5 shows the wall-clock time per training step for SDPO vs GRPO. SDPO adds only ~5.8–17.1% overhead, with the majority of time spent on response generation (Gen) rather than the self-teacher log-prob computation.*
 
@@ -50,7 +50,7 @@ Learning without Rich Environment Feedback
 
 An important contribution of the paper is showing that SDPO works even in standard RLVR environments that do not provide any feedback beyond scalar rewards. In this setting, SDPO treats successful attempts sampled in the current batch as implicit feedback for failed attempts on the same question. When a group of responses is generated for a question, and one or more of them are correct, those correct responses serve as sample solutions. The self-teacher can then compare the student's failed attempt with the successful attempt and identify where the student went wrong. This is evaluated on science questions covering chemistry, physics, biology, and materials science, as well as tool use tasks where the model must map a tool API specification to the correct tool call. The results show that SDPO substantially outperforms GRPO across most tasks, often achieving the accuracy of five hours of GRPO training after only one hour of SDPO training. For example, on chemistry tasks with Olmo3-7B-Instruct, SDPO achieves more than ten percentage points higher final accuracy than GRPO.
 
-![Figure 6: Training progression of Olmo3-7B-Instruct on Chemistry](/assets/img/fig6_training_progression.png)
+![Figure 6: Training progression of Olmo3-7B-Instruct on Chemistry](/assets/img/fig6_training_progression.webp)
 
 *Figure 6 (left) shows SDPO achieving higher accuracy faster than GRPO on Chemistry tasks. (Right) Response lengths over training — SDPO maintains significantly shorter generations.*
 
@@ -58,7 +58,7 @@ Reasoning Conciseness
 
 A particularly interesting finding is that SDPO produces substantially shorter responses than GRPO while achieving higher accuracy. On average, SDPO responses are more than three times shorter than GRPO responses. The paper observes that GRPO's longer responses often stem from superficial reasoning patterns such as filler phrases like "Hmm" and "Wait," or circular logical loops that repeat previous steps verbatim. The paper provides a concrete example where GRPO generates a response with over five thousand tokens that includes the phrase "Wait I'm going in circles," while SDPO produces a correct answer in under eight hundred tokens with no such circular reasoning. The paper argues that SDPO's dense credit assignment, which assigns individual advantages to each token, leads to sparse advantages that help the model avoid these superficial patterns. This demonstrates that effective reasoning need not always be verbose and that reasoning performance can be improved by refining how the model reasons, not just how long it reasons.
 
-![Figure 7: Example responses from GRPO and SDPO](/assets/img/fig7_response_comparison.png)
+![Figure 7: Example responses from GRPO and SDPO](/assets/img/fig7_response_comparison.webp)
 
 *Figure 7 shows a concrete chemistry question where GRPO produces 5000+ tokens with circular reasoning ("Wait I'm going in circles"), while SDPO answers correctly in under 800 tokens with no filler.*
 
@@ -66,7 +66,7 @@ Learning with Rich Environment Feedback on Coding Tasks
 
 The paper evaluates SDPO on competitive programming problems from LiveCodeBench v6, which contains contest-style coding problems ranging from simple to competition-level. These problems provide rich feedback in the form of runtime errors and failed unit tests, making them a natural fit for the RLRF setting. The results show that SDPO achieves substantially higher final accuracy than GRPO, reaching 48.8 percent versus 41.2 percent, and also outperforms the strongest instruct models on the public leaderboard, including Claude Sonnet 4 at 40.5 percent and Claude Opus 4 at 39.7 percent. The paper finds that SDPO particularly improves over GRPO on medium and hard questions, highlighting the importance of rich feedback for challenging tasks.
 
-![Figure 1: SDPO substantially outperforms GRPO on LiveCodeBench v6](/assets/img/fig1_main_results.png)
+![Figure 1: SDPO substantially outperforms GRPO on LiveCodeBench v6](/assets/img/fig1_main_results.webp)
 
 *Figure 1 shows the learning curves: SDPO (blue) achieves 48.8% final accuracy vs GRPO (orange) at 41.2% with Qwen3-8B, outperforming even Claude Sonnet 4 (40.5%) and Opus 4 (39.7%).*
 
@@ -74,7 +74,7 @@ Self-Distillation Benefits from Stronger Models
 
 A central question for the paper is whether SDPO is sensitive to the in-context learning ability of the base model. The paper performs a scaling study with different model sizes from the Qwen3 family and finds that SDPO significantly outperforms GRPO on larger models while only slightly improving over GRPO on smaller models. The ability of the teacher to perform accurate retrospection appears to be an emergent phenomenon with scale, meaning that as models become larger and better at in-context learning, the self-teacher becomes more effective at identifying mistakes and providing useful feedback. This suggests that SDPO's benefits will continue to grow as language models improve.
 
-![Figure 8: SDPO improves with model size](/assets/img/fig8_scaling.png)
+![Figure 8: SDPO improves with model size](/assets/img/fig8_scaling.webp)
 
 *Figure 8 compares final LCBv6 accuracy across Qwen3 model sizes. SDPO's advantage over GRPO grows with scale — the self-teacher's retrospection ability is an emergent phenomenon.*
 
@@ -82,7 +82,7 @@ Dense Credit Assignment in SDPO
 
 The paper performs an important ablation study to understand whether the performance gains come from leveraging rich feedback or from dense credit assignment. It compares three variants: logit-level SDPO with credit assignment over the top 100 tokens, token-level SDPO with credit assignment over only the most likely token, and sequence-level SDPO that averages advantages across all tokens to produce a single scalar advantage per sequence. The results show that logit-level SDPO significantly outperforms token-level and sequence-level SDPO, demonstrating that dense credit assignment is important. However, even sequence-level SDPO outperforms GRPO, indicating that leveraging rich feedback can lead to gains even without dense credit assignment. This means that the benefits of SDPO come from both using rich feedback and from the per-token credit assignment.
 
-![Figure 9: Dense credit assignment in SDPO](/assets/img/fig9_credit_assignment.png)
+![Figure 9: Dense credit assignment in SDPO](/assets/img/fig9_credit_assignment.webp)
 
 *Figure 9 visualizes the per-token advantages assigned by the self-teacher for the example from Figure 4. Blue tokens receive positive advantage, red tokens negative — the model learns exactly which tokens caused the error.*
 
@@ -102,13 +102,13 @@ Test-Time Self-Distillation
 
 The paper introduces a novel application of SDPO called test-time self-distillation, where the model is given only a single hard question and must discover a solution as quickly as possible. The key metric is discovery-k, which measures the probability of discovering at least one solution within k attempts. This contrasts with standard RLVR methods, which only begin learning after the first solution has been found because they receive no signal until then. SDPO can learn from failed attempts because it receives rich feedback even when the answer is wrong. At test time, SDPO repeatedly attempts a hard question, receives feedback, and updates its weights through self-distillation. This compresses the interaction history directly into the model parameters rather than relying on the context window, which is limited by the transformer's maximum sequence length.
 
-![Figure 12: Compressing context into model weights via self-distillation](/assets/img/fig12_testtime.png)
+![Figure 12: Compressing context into model weights via self-distillation](/assets/img/fig12_testtime.webp)
 
 *Figure 12 illustrates the test-time self-distillation process: the model repeatedly attempts a fixed hard question, receives feedback, and updates its weights through self-distillation, compressing interaction history directly into parameters.*
 
 The results show that SDPO achieves higher discovery rates than both best-of-k sampling and multi-turn conversation baselines on both hard and very hard questions. For very hard questions where the base model's pass-64 is below 3 percent, SDPO discovers a solution in 53.2 percent of cases compared to 35.6 percent for multi-turn and 41.5 percent for best-of-k. Most remarkably, on one very hard question that neither best-of-k nor multi-turn sampling could solve within 2750 attempts, SDPO discovered a solution after only 321 attempts.
 
-![Figure 13: Self-distillation at test-time solves hard questions](/assets/img/fig13_testtime_results.png)
+![Figure 13: Self-distillation at test-time solves hard questions](/assets/img/fig13_testtime_results.webp)
 
 *Figure 13 compares discovery@k for SDPO, multi-turn sampling, and best-of-k on very hard (left) and hard (right) LCBv6 questions. SDPO achieves substantially higher discovery rates at almost all generation budgets.*
 

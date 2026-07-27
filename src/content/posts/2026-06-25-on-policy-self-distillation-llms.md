@@ -10,13 +10,13 @@ This paper introduces On-Policy Self-Distillation, or OPSD for short, a new way 
 
 The motivation for this approach comes from watching how human students learn. When a student gets a problem wrong and then looks at the correct solution, they can often rationalize the steps, understand where they went wrong, and internalize the correct approach. The paper hypothesizes that language models have a similar ability: they are better at evaluating and explaining a correct solution than they are at generating the correct answer from scratch. This asymmetry between evaluation and generation is the key insight that OPSD exploits. By giving the model the correct answer and asking it to generate a solution after seeing the reference, the teacher version naturally produces a distribution over tokens that reflects what a well-informed version of the model would say at each step.
 
-![Figure 1: Overview of OPSD](/assets/img/opsd_fig1_overview.png)
+![Figure 1: Overview of OPSD](/assets/img/opsd_fig1_overview.webp)
 
 *Figure 1 illustrates the core OPSD setup: a student policy generates an on-policy response, while a teacher policy (same model, conditioned on the ground-truth solution) evaluates each token. The training objective minimizes per-token divergence between teacher and student distributions.*
 
 The technical details of how OPSD works are important to understand. Given a dataset of problems and their ground-truth solutions, OPSD constructs two prompts for the same language model. The student prompt just contains the problem. The teacher prompt contains the problem plus the reference solution and an instruction asking the model to generate its own solution after understanding the reference. Crucially, the teacher does not actually generate tokens during training—it only does a single forward pass to produce a probability distribution over all possible next tokens at each position. The student generates a full response autoregressively. Then for each token position in the student's response, the training objective minimizes the divergence between the teacher's distribution and the student's distribution. The gradient only flows through the student's logits, so the student learns to match the teacher's behavior without the teacher itself being updated.
 
-![Figure 2: Prompt example for student and teacher policies](/assets/img/opsd_fig2_prompts.png)
+![Figure 2: Prompt example for student and teacher policies](/assets/img/opsd_fig2_prompts.webp)
 
 *Figure 2 shows the actual prompt templates. The student receives only the problem. The teacher receives the problem plus the ground-truth solution as privileged information, then rationalizes and generates its own solution before evaluating the student's rollout.*
 
@@ -24,7 +24,7 @@ There are three important design choices that the paper explores in detail. The 
 
 The training process itself is remarkably efficient. OPSD converges within 100 gradient steps, using only a single generation per problem with 1024 tokens maximum. This is in stark contrast to GRPO, a popular reinforcement learning method, which requires 8 generations per problem of up to 16000 tokens each and often sees its performance stagnate or degrade after 100 steps. The reason for this efficiency is that OPSD provides dense, token-level feedback on every single generation, regardless of whether the final answer is correct. GRPO, on the other hand, only gives a binary reward based on whether the final answer matches, and if all eight samples happen to be correct or all incorrect, the gradient vanishes entirely. The paper shows empirically that within 100 training steps, more than half of GRPO's batches have zero reward standard deviation, meaning no learning occurs at all.
 
-![Figure 3: Token Efficiency of OPSD](/assets/img/opsd_fig3_token_efficiency.png)
+![Figure 3: Token Efficiency of OPSD](/assets/img/opsd_fig3_token_efficiency.webp)
 
 *Figure 3 compares OPSD and GRPO on Qwen3-1.7B. OPSD uses significantly fewer tokens but outperforms GRPO on all benchmarks. The rightmost plot shows GRPO's reward diversity collapse — more than half of its batches have zero reward std dev within 100 steps.*
 
@@ -42,7 +42,7 @@ The paper also connects to the broader debate about whether supervised fine-tuni
 
 An interesting observation from the ablation studies is that earlier tokens in the student's generation may contribute more to effective distillation than later tokens. When the student's generation is longer, later tokens become increasingly predictable to the teacher because the teacher has already seen a long prefix of the student's reasoning. This means less learning signal comes from those later positions. The paper finds that increasing generation length from 1024 to 4096 does not consistently improve performance, supporting the idea that critical branching points in reasoning happen early.
 
-![Figure 4 & 5: Effect of KL Clipping and Generation Length](/assets/img/opsd_fig4_clipping_fig5_length.png)
+![Figure 4 & 5: Effect of KL Clipping and Generation Length](/assets/img/opsd_fig4_clipping_fig5_length.webp)
 
 *Figure 4 (top) shows that per-token pointwise KL clipping prevents performance collapse on AIME24. Figure 5 (bottom) shows that increasing generation length from 1024 to 4096 does not lead to consistent improvements, as earlier tokens contribute more to effective distillation.*
 

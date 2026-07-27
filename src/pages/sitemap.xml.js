@@ -1,3 +1,4 @@
+import { baseUrl } from '../lib/base-url';
 import { getCollection } from 'astro:content';
 
 function escapeXml(value = '') {
@@ -10,9 +11,7 @@ function escapeXml(value = '') {
 }
 
 function absoluteUrl(path, site) {
-  const base = import.meta.env.BASE_URL.endsWith('/')
-    ? import.meta.env.BASE_URL
-    : `${import.meta.env.BASE_URL}/`;
+  const base = baseUrl();
   const normalizedPath = path.startsWith('/') ? path.slice(1) : path;
   return new URL(`${base}${normalizedPath}`, site).toString();
 }

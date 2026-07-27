@@ -1,8 +1,9 @@
 ---
+import { baseUrl } from '../lib/base-url';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const missingBackButtonLabel = "Back to home page";
-const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const base = baseUrl();
 ---
 
 <BaseLayout title="404 - Page Not Found">
