@@ -8,6 +8,10 @@ pubDate: 2026-07-15
 
 This paper is a technical preview of DeepSeek-V4, a new family of large language models from DeepSeek-AI. The main story is not only that the models score well on benchmarks. The deeper story is that they try to make million-token context practical. In plain terms, that means the model can read and work with extremely long inputs, such as huge documents, long agent conversations, long chains of tool use, and long internal reasoning, without the usual explosion in cost and memory. The paper presents two models. DeepSeek-V4-Pro is the larger one, with about 1.6 trillion total parameters but only about 49 billion active for each token. DeepSeek-V4-Flash is the smaller and cheaper one, with about 284 billion total parameters and about 13 billion active per token. Both are Mixture-of-Experts models, which means they contain many expert sub-networks and only a few are switched on for any given token. Both claim native support for a context length of one million tokens. The authors also introduce a maximum reasoning effort mode called DeepSeek-V4-Pro-Max, which is the strongest setting of the Pro model and is the one they compare most aggressively against frontier closed models.
 
+![Figure 1: Benchmark performance and efficiency of DeepSeek-V4](/assets/img/dsv4_fig1_overview_efficiency.webp)
+
+*Figure 1 (left) shows DeepSeek-V4-Pro-Max competing with frontier models on benchmarks. (right) shows inference FLOPs and KV cache size versus DeepSeek-V3.2 — V4-Pro uses only ~27% of the FLOPs and ~10% of the KV cache at 1M context.*
+
 ## Why long context was the real bottleneck
 
 Modern large language models got a big boost from test-time scaling, which means letting the model think longer, produce more reasoning tokens, call more tools, and explore more paths before answering. That approach works, but it runs into a hard wall. Standard attention, the core mechanism that lets every token look at every earlier token, grows roughly with the square of sequence length. If the sequence becomes ten times longer, the attention work can become about one hundred times heavier. At the same time, the model must store a Key-Value cache of past tokens so that generation does not recompute everything from scratch. That cache grows with sequence length and becomes a memory bottleneck. Because of this, ultra-long reasoning, multi-document analysis, and long-horizon agents stay expensive even if the model is smart. DeepSeek-V4 is trying to break that efficiency barrier so that million-token contexts stop being rare research demos and become ordinary infrastructure for training, serving, and agent systems.
@@ -15,6 +19,10 @@ Modern large language models got a big boost from test-time scaling, which means
 ## The high-level architecture picture
 
 DeepSeek-V4 still looks like a Transformer at the top level. Tokens go through embeddings, then many Transformer blocks, then a prediction head. It also keeps Multi-Token Prediction modules, which means the model is trained not only to predict the next token but also additional future tokens. That idea was already used in DeepSeek-V3 and is kept here because it worked. The feed-forward parts still use DeepSeekMoE, meaning shared experts plus many routed experts. What is new is mainly three things. First, residual connections between layers are upgraded with Manifold-Constrained Hyper-Connections, often abbreviated mHC. Second, attention is no longer ordinary full attention. Instead the model uses a hybrid of Compressed Sparse Attention and Heavily Compressed Attention, often abbreviated CSA and HCA. Third, most parameters are trained with the Muon optimizer rather than only AdamW. Put simply, the model keeps the proven MoE and multi-token prediction backbone, then upgrades the residual highway, redesigns attention for long sequences, and changes the optimizer so training converges faster and more stably.
+
+![Figure 2: Overall architecture of DeepSeek-V4](/assets/img/dsv4_fig2_architecture.webp)
+
+*Figure 2 shows how CSA and HCA attention layers, DeepSeekMoE feed-forward layers, and mHC residual connections fit together in the DeepSeek-V4 architecture.*
 
 ## What was inherited from DeepSeek-V3
 
@@ -36,9 +44,17 @@ Compressed Sparse Attention works in stages. First it builds token-level Key-Val
 
 There are more details that matter for quality and cost. Queries for both the indexer and the main attention are produced in a low-rank way: the hidden state is first projected down into a compressed latent, then expanded into many heads. Because the number of query heads is large, dumping all head outputs into one giant projection would be expensive, so CSA uses grouped output projection. Heads are split into groups, each group is projected to a smaller intermediate output, and then those intermediates are projected to the final attention output. The model also adds a sliding-window branch of recent uncompressed Key-Value entries so local neighbors are never lost. That matters because pure block compression can hide tokens inside the current incomplete block, and language modeling often depends strongly on recent local context. For CSA, window size is 128. There is also query and Key-Value normalization with RMSNorm just before core attention to stop attention logits from exploding. Rotary positional embeddings are applied only partially, specifically to the last 64 dimensions of the relevant vectors, and a reverse rotary is applied on the attention output so the model ends up with relative position information rather than sticky absolute position artifacts. Finally, attention sink logits are added so each head can choose not to put all of its probability mass on real tokens. In simple words, a head can decide that none of the candidates deserve full attention.
 
+![Figure 3: Compressed Sparse Attention (CSA) architecture](/assets/img/dsv4_fig3_csa.webp)
+
+*Figure 3 shows how CSA compresses KV entries (4:1 ratio), uses a lightning indexer for sparse top-k selection, and combines selected compressed entries with a sliding-window branch for local detail.*
+
 ## Heavily Compressed Attention explained carefully
 
 Heavily Compressed Attention is the more extreme sibling. It compresses every large block of tokens into one entry, with a much larger compression rate. In both Flash and Pro, that rate is 128, so one hundred twenty-eight tokens collapse into one heavily compressed Key-Value entry. Unlike CSA, HCA does not use sparse top-k selection over compressed blocks. After heavy compression, the compressed stream is short enough that dense Multi-Query Attention over it is acceptable. HCA still uses the same family of ideas for low-rank query generation, grouped output projection, sliding-window local attention, partial rotary embeddings, RMSNorm before attention, and attention sinks. The difference in philosophy is clear. CSA keeps more fine-grained compressed memory and then sparsely picks the useful pieces. HCA throws away most fine grain early, keeps a coarse global memory that is cheap to attend over densely, and relies on the sliding window plus other layers for local detail. By interleaving CSA and HCA across depth, the model gets both sparse selective memory and cheap global memory.
+
+![Figure 4: Heavily Compressed Attention (HCA) architecture](/assets/img/dsv4_fig4_hca.webp)
+
+*Figure 4 shows HCA compressing 128 tokens into one KV entry and attending densely over the compressed stream, plus a sliding window for local context.*
 
 ## How efficient this hybrid attention really is
 
@@ -84,6 +100,12 @@ Training was not smooth. Loss spikes kept appearing. Simple rollbacks helped tem
 
 Even before post-training, the base models already look strong. DeepSeek-V4-Flash-Base, despite fewer active and total parameters than DeepSeek-V3.2-Base, beats it on many world-knowledge and long-context evaluations. That is an important efficiency story: better architecture and data can outweigh raw parameter count. DeepSeek-V4-Pro-Base then jumps further and becomes the strongest DeepSeek foundation model across knowledge, reasoning, coding, and long context in their internal comparisons. LongBench-V2 scores rise clearly from V3.2-Base to Flash-Base to Pro-Base. Knowledge tasks such as Simple-QA verified and FACTS Parametric improve dramatically for Pro-Base. Coding and math are more mixed for Flash versus V3.2, but Pro generally leads. The takeaway is that the pre-training recipe already delivers both capability and long-context competence before any instruction or agent finetuning.
 
+![Table 1: Base model comparison — V3.2 vs V4-Flash vs V4-Pro](/assets/img/dsv4_table1_base_p1.webp)
+
+![Table 1: Base model comparison (continued)](/assets/img/dsv4_table1_base_p2.webp)
+
+*Table 1 compares DeepSeek-V3.2-Base, V4-Flash-Base, and V4-Pro-Base across knowledge, reasoning, coding, and long-context tasks. V4-Flash-Base beats V3.2-Base despite fewer active parameters, and V4-Pro-Base leads across the board.*
+
 ## Post-training philosophy: specialists first, then on-policy distillation
 
 After pre-training, DeepSeek-V4 does not simply mix all skills in one big reinforcement learning soup. It first grows specialists. For each domain such as math, coding, agents, and instruction following, a separate expert model is trained with supervised fine-tuning and then reinforcement learning using Group Relative Policy Optimization. Reward signals are domain-specific. For hard-to-verify tasks, they avoid classic scalar reward models trained from huge human preference sets. Instead they use a Generative Reward Model that judges trajectories with rubrics and can itself be improved with reinforcement learning. The same actor can generate and judge, which fuses reasoning ability into evaluation and reduces the need for massive annotation. After many specialists exist, a single student model is trained with multi-teacher On-Policy Distillation. The student generates its own trajectories, then learns by reverse KL matching against the relevant teachers on those on-policy samples. Full-vocabulary logits are used rather than cheap token-level KL estimates, because full distributions give more stable gradients. More than ten teachers can be involved. Engineering makes this possible by offloading teacher weights, caching last-layer teacher hidden states instead of materializing huge vocab logits for every teacher, loading one teacher head at a time, and computing exact KL with a specialized kernel.
@@ -108,13 +130,27 @@ Agent training needs safe places to run code, shells, browsers, and software pro
 
 DeepSeek-V4-Pro-Max becomes the headline open model in the paper. On broad world knowledge, especially SimpleQA-style factuality, it strongly outperforms prior open models and closes much of the gap to the best proprietary systems, though Gemini-class models still lead on some knowledge suites. On educational and hard reasoning sets such as MMLU-Pro, GPQA, and Humanity's Last Exam, it is competitive with or better than strong open rivals and close to, but not fully above, the newest closed frontier. On coding competitions and math contests it is especially impressive. The paper reports Codeforces ratings that put DeepSeek-V4-Pro-Max among the best systems they evaluated, even ranking high against human contestants in their setup, and says this is the first time an open model matched closed models on that style of coding evaluation. Formal math with Lean tools also looks very strong, especially when informal reasoning is used to explore and formal verification is used to certify. Agent benchmarks such as software engineering repair, terminal tasks, browsing, and multi-tool suites show DeepSeek-V4-Pro roughly on par with leading open models and still a bit behind or mixed against the best closed models, depending on the task. The Flash model is weaker on pure knowledge, as expected from fewer parameters, but with a large thinking budget it can approach Pro on many reasoning tasks and remains highly cost-effective.
 
+![Table 6: DeepSeek-V4-Pro-Max vs closed/open source models (page 1)](/assets/img/dsv4_table6_results_p1.webp)
+
+![Table 6: DeepSeek-V4-Pro-Max vs closed/open source models (page 2)](/assets/img/dsv4_table6_results_p2.webp)
+
+*Table 6 compares DeepSeek-V4-Pro-Max against frontier closed and open models across knowledge, reasoning, coding, math, and agent tasks. Pro-Max is competitive with the best closed models on reasoning and coding, and leads on several math and coding benchmarks.*
+
 ## Long-context evaluation and the meaning of one million tokens
 
 Because the whole point of the architecture is long context, the paper evaluates retrieval and long-document tasks at large windows. On MRCR-style multi-needle retrieval, Pro-Max stays strong out to very large inputs. Performance is especially stable up to around 128K and remains competitive even at 1M tokens, though some degradation appears after 128K. On CorpusQA-like more realistic long-document question answering, Pro also beats Gemini-3.1-Pro in their re-evaluation setup while still trailing Claude Opus 4.6 on some retrieval metrics. The important qualitative point is not that the model is perfect at one million tokens. The important point is that quality remains usable while cost and memory stay far below older attention designs. That is what turns million-token context from a marketing number into something you can actually serve.
 
+![Figure 9: MRCR long-context retrieval performance](/assets/img/dsv4_fig9_retrieval.webp)
+
+*Figure 9 shows DeepSeek-V4 series retrieval performance on MRCR. Performance is highly stable within 128K and remains competitive even at 1M tokens. Pro-Max beats Gemini-3.1-Pro at most lengths but trails Claude Opus 4.6 on some retrieval metrics.*
+
 ## Reasoning effort really changes the model
 
 Table-style comparisons in the paper show that Non-think, High, and Max are not cosmetic labels. Hard benchmarks jump sharply when more thinking budget is allowed. Easy knowledge can improve too, but the biggest gains appear on difficult reasoning, contest math, contest coding, and long agent trajectories. Compared with DeepSeek-V3.2, the V4 series gets more out of extra test-time tokens on tasks like Humanity's Last Exam and terminal-bench style agent work. In other words, the architecture is not only cheaper at long context. It is also a better substrate for test-time scaling, because longer thoughts and longer tool traces no longer punish the system as severely.
+
+![Figure 10: HLE and Terminal Bench 2.0 performance by reasoning effort](/assets/img/dsv4_fig10_reasoning_effort.webp)
+
+*Figure 10 shows how DeepSeek-V4-Pro and V4-Flash scale with reasoning effort on Humanity's Last Exam and Terminal Bench 2.0. The Max mode substantially outperforms Non-think and High modes, and V4 series show larger gains from test-time compute than DeepSeek-V3.2.*
 
 ## Real-world product evaluations beyond leaderboard scores
 
