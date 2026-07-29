@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      height: 100%;
+      overflow: auto;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #ffffff;
+      color: #000000;
+    }
+    .component-wrapper {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      box-sizing: border-box;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="component-wrapper">
+    <html><head></head><body><div class="absolute inset-0 bg-neutral-950">
+  <div class="relative w-full h-full">
+    <canvas id="beamsCanvas" class="absolute inset-0"></canvas>
+    <div class="absolute inset-0 bg-neutral-950/5 backdrop-blur-3xl animate-pulse [animation-duration:8s]"></div>
+    <div class="pointer-events-none absolute inset-0">
+      <div class="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-neutral-950 to-transparent"></div>
+      <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-neutral-950 to-transparent"></div>
+      <div class="absolute -inset-[25%] bg-[radial-gradient(60%_60%_at_50%_40%,rgba(80,120,255,0.10),transparent)]"></div>
+    </div>
+  </div>
+  <script>
+    // Beams Canvas
+    (() => {
+      const canvas = document.getElementById('beamsCanvas');
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d', { alpha: true });
+      if (!ctx) return;
+      
+      const MINIMUM_BEAMS = 20;
+      let beams = [];
+      let rafId = 0;
+      
+      const opacityMap = {
+        subtle: 0.7,
+        medium: 0.85,
+        strong: 1.0,
+      };
+      
+      let intensity = 'strong';
+      
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+      
+      function createBeam(w, h) {
+        const angle = -35 + Math.random() * 10;
+        return {
+          x: Math.random() * w * 1.5 - w * 0.25,
+          y: Math.random() * h * 1.5 - h * 0.25,
+          width: 30 + Math.random() * 60,
+          length: h * 2.5,
+          angle,
+          speed: 0.6 + Math.random() * 1.2,
+          opacity: 0.12 + Math.random() * 0.16,
+          hue: 190 + Math.random() * 70,
+          pulse: Math.random() * Math.PI * 2,
+          pulseSpeed: 0.02 + Math.random() * 0.03,
+        };
+      }
+      
+      function resetBeam(beam, index, totalBeams, w, h) {
+        const column = index % 3;
+        const spacing = w / 3;
+        beam.y = h + 100;
+        beam.x = column * spacing + spacing / 2 + (Math.random() - 0.5) * spacing * 0.5;
+        beam.width = 100 + Math.random() * 100;
+        beam.speed = 0.5 + Math.random() * 0.4;
+        beam.hue = 190 + (index * 70) / totalBeams;
+        beam.opacity = 0.2 + Math.random() * 0.1;
+        return beam;
+      }
+      
+      function updateCanvasSize() {
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+        const w = Math.floor(canvas.clientWidth || window.innerWidth);
+        const h = Math.floor(canvas.clientHeight || window.innerHeight);
+        
+        canvas.width = Math.floor(w * dpr);
+        canvas.height = Math.floor(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        
+        const density = Math.min(1.5, Math.max(1, (w * h) / (1280 * 800)));
+        const total = Math.floor(MINIMUM_BEAMS * density * 1.5);
+        
+        beams = Array.from({ length: total }, () => createBeam(w, h));
+      }
+      
+      function drawBeam(c, beam, w, h) {
+        c.save();
+        c.translate(beam.x, beam.y);
+        c.rotate((beam.angle * Math.PI) / 180);
+        
+        const pulsingOpacity = beam.opacity * (0.8 + Math.sin(beam.pulse) * 0.2) * opacityMap[intensity];
+        
+        const gradient = c.createLinearGradient(0, 0, 0, beam.length);
+        gradient.addColorStop(0, `hsla(${beam.hue},85%,65%,0)`);
+        gradient.addColorStop(0.1, `hsla(${beam.hue},85%,65%,${pulsingOpacity * 0.5})`);
+        gradient.addColorStop(0.4, `hsla(${beam.hue},85%,65%,${pulsingOpacity})`);
+        gradient.addColorStop(0.6, `hsla(${beam.hue},85%,65%,${pulsingOpacity})`);
+        gradient.addColorStop(0.9, `hsla(${beam.hue},85%,65%,${pulsingOpacity * 0.5})`);
+        gradient.addColorStop(1, `hsla(${beam.hue},85%,65%,0)`);
+        
+        c.fillStyle = gradient;
+        c.fillRect(-beam.width / 2, 0, beam.width, beam.length);
+        c.restore();
+      }
+      
+      function animate() {
+        const w = canvas.clientWidth || window.innerWidth;
+        const h = canvas.clientHeight || window.innerHeight;
+        
+        ctx.clearRect(0, 0, w, h);
+        ctx.filter = 'blur(35px)';
+        
+        const total = beams.length;
+        for (let i = 0; i < total; i++) {
+          const b = beams[i];
+          b.y -= b.speed;
+          b.pulse += b.pulseSpeed;
+          
+          if (b.y + b.length < -100) {
+            resetBeam(b, i, total, w, h);
+          }
+          drawBeam(ctx, b, w, h);
+        }
+        
+        rafId = requestAnimationFrame(animate);
+      }
+      
+      function init() {
+        const parent = canvas.parentElement;
+        if (parent) {
+          const rect = parent.getBoundingClientRect();
+          canvas.style.width = rect.width + 'px';
+          canvas.style.height = rect.height + 'px';
+        }
+        updateCanvasSize();
+        cancelAnimationFrame(rafId);
+        animate();
+      }
+      
+      window.addEventListener('resize', () => {
+        updateCanvasSize();
+      }, { passive: true });
+      
+      init();
+      
+      // External intensity control
+      window.setBeamIntensity = function(newIntensity) {
+        if (opacityMap[newIntensity]) {
+          intensity = newIntensity;
+        }
+      };
+    })();
+  </script>
+</div></body></html>
+  </div>
+  
+    <script>
+      (function() {
+        function checkAndCenter() {
+          // Use double requestAnimationFrame to ensure DOM is fully painted and layout is stable
+          requestAnimationFrame(function() {
+            requestAnimationFrame(function() {
+              const wrapper = document.querySelector('.component-wrapper');
+              if (!wrapper) return;
+              
+              // Get all child elements
+              const children = Array.from(wrapper.children);
+              if (children.length === 0) return;
+              
+              // Temporarily override wrapper styles to shrink-wrap for measurement
+              // Set inline styles to shrink-wrap (inline styles override CSS)
+              wrapper.style.display = 'inline-block';
+              wrapper.style.width = 'auto';
+              wrapper.style.height = 'auto';
+              wrapper.style.overflow = 'visible';
+              wrapper.style.boxSizing = 'content-box';
+              
+              // Force multiple reflows to ensure styles are fully applied
+              void wrapper.offsetHeight;
+              void wrapper.offsetWidth;
+              void wrapper.offsetHeight;
+              
+              // Measure the wrapper's content size
+              const contentWidth = wrapper.offsetWidth;
+              const contentHeight = wrapper.offsetHeight;
+              
+              // Restore original styles by removing inline styles we added
+              wrapper.style.removeProperty('display');
+              wrapper.style.removeProperty('width');
+              wrapper.style.removeProperty('height');
+              wrapper.style.removeProperty('overflow');
+              wrapper.style.removeProperty('box-sizing');
+              
+              // If content is less than 500x500, center it
+              if (contentWidth > 0 && contentHeight > 0 && contentWidth < 500 && contentHeight < 500) {
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'center';
+                wrapper.style.justifyContent = 'center';
+              }
+            });
+          });
+        }
+        
+        // Check immediately and after delays to ensure content is rendered and styled
+        function runChecks() {
+          checkAndCenter();
+          setTimeout(checkAndCenter, 50);
+          setTimeout(checkAndCenter, 150);
+          setTimeout(checkAndCenter, 300);
+          setTimeout(checkAndCenter, 500);
+          setTimeout(checkAndCenter, 1000);
+        }
+        
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', runChecks);
+        } else {
+          runChecks();
+        }
+        
+        // Also check when images or other resources load
+        window.addEventListener('load', () => {
+          setTimeout(checkAndCenter, 100);
+          setTimeout(checkAndCenter, 300);
+        });
+        
+        // Use ResizeObserver to detect size changes
+        if (window.ResizeObserver) {
+          setTimeout(() => {
+            const wrapper = document.querySelector('.component-wrapper');
+            if (wrapper) {
+              const observer = new ResizeObserver(() => {
+                setTimeout(checkAndCenter, 50);
+              });
+              observer.observe(wrapper);
+            }
+          }, 500);
+        }
+      })();
+    </script>
+  
+</body>
+</html>
