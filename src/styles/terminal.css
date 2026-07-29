@@ -31,9 +31,9 @@
 }
 
 :root {
-  --background: #faedcd;
-  --foreground: #240046;
-  --accent: #7b2cbf;
+  --background: #03071e
+  --foreground: #d8e2dc
+  --accent: #e85d04;
   --font-size: 1.1rem;
   --line-height: 1.45em;
   /* Geist (Google Fonts) — site-wide sans-serif variable */
