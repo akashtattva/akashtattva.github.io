@@ -30,14 +30,22 @@
   font-display: block;
 }
 
+@font-face {
+  font-family: 'Poly Sans Neutral';
+  src: url('/fonts/polysanstrial-neutral.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
 :root {
-  --background: #101519;
-  --foreground: #ccd5ae;
-  --accent: #cad2c5;
+  --background: #182025;
+  --foreground: #76c893;
+  --accent: #c9e4ca;
   --font-size: 1.1rem;
   --line-height: 1.45em;
-  /* Geist (Google Fonts) — site-wide sans-serif variable */
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  /* Poly Sans Neutral — site-wide sans-serif variable */
+  --font-sans: 'Poly Sans Neutral', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 /* Helper utility: use var(--font-sans) or the .font-sans class */
@@ -58,12 +66,11 @@ html {
 }
 
 body {
-  font-family: 'Geist', sans-serif !important;
+  font-family: 'Poly Sans Neutral', sans-serif !important;
 
   font-synthesis: none;
   font-size: 18px !important;
   font-weight: 500;
-  /* letter-spacing: 0.0em; */
   line-height: var(--line-height);
   background-color: var(--background);
   color: var(--foreground);
@@ -92,7 +99,6 @@ h6 {
   font-weight: 400 !important;
   display: block;
   font-size: calc(var(--font-size) * 1.6);
-  /* letter-spacing: 0.0em; */
   line-height: 1.2;
 }
 
