@@ -20,8 +20,8 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
-    "prebuild": "node scripts/optimize-images.mjs",
     "build": "astro check && astro build",
+    "optimize-images": "node scripts/optimize-images.mjs",
     "test": "vitest run",
     "preview": "astro preview",
     "astro": "astro"

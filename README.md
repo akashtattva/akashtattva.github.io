@@ -11,6 +11,9 @@ npm run dev
 
 # Build for production
 npm run build
+
+# Optimize images (run manually when you add new images)
+npm run optimize-images
 ```
 
 This site deploys through GitHub Actions.
