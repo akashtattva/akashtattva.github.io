@@ -40,8 +40,8 @@
 
 :root {
   --background: #182025;
-  --foreground: #76c893;
-  --accent: #c9e4ca;
+  --foreground: #c9e4ca;
+  --accent: #76c893;
   --font-size: 1.1rem;
   --line-height: 1.45em;
   /* Poly Sans Neutral — site-wide sans-serif variable */
