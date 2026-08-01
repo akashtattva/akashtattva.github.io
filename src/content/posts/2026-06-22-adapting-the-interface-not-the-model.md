@@ -3,15 +3,16 @@ title: "Adapting the Interface, Not the Model"
 pubDate: 2026-06-22
 ---
 
-## Detailed Notes on Adapting the Interface, Not the Model
+## Notes on Adapting the Interface, Not the Model
 
-## Paper Summary
 
-This paper by Tianshi Xu, Huifeng Wen, and Meng Li from Peking University argues that LLM agent failures in deterministic environments are often caused not by the model itself but by mismatches at the boundary between the model and the environment. Rather than fine-tuning model weights, they propose adapting the runtime harness the system that mediates how the model sees the environment, calls tools, executes actions, and recovers from mistakes. They call their approach LIFE-HARNESS.
+This paper argues that LLM agent failures in deterministic environments are often caused not by the model itself but by mismatches at the boundary between the model and the environment.
 
-## The Core Insight
+Rather than fine-tuning model weights, they propose adapting the runtime harness the system that mediates how the model sees the environment, calls tools, executes actions, and recovers from mistakes. They call their approach LIFE-HARNESS.
 
-An LLM agent is not just an LLM. It is a model embedded in a stateful loop: the environment produces observations, the runtime system specifies available tools and actions, the model emits an action, the executor applies it, and feedback updates the next decision. The behavior of the agent is shaped as much by this runtime harness as by the model itself. When a model fails on a task, it is often not because it lacks reasoning ability but because it saw a poorly structured observation, used a tool incorrectly, or got stuck in a loop. The paper shows that Qwen3.5-4B scores 74 percent on a math competition but only 43 percent on an embodied interaction benchmark. The model has the reasoning power it just does not know how to interact properly.
+An LLM agent is a system embedded in a stateful loop: the environment produces observations, the runtime system specifies available tools and actions, the model emits an action, the executor applies it, and feedback updates the next decision.
+
+The behavior of the agent is shaped as much by this runtime harness as by the model itself. When a model fails on a task, it is often not because it lacks reasoning ability but because it saw a poorly structured observation, used a tool incorrectly, or got stuck in a loop. The paper shows that Qwen3.5-4B scores 74 percent on a math competition but only 43 percent on an embodied interaction benchmark. The model has the reasoning power it just does not know how to interact properly.
 
 ## The Four Layers of LIFE-HARNESS
 
@@ -27,13 +28,17 @@ The Trajectory Regulation Layer operates after environment feedback returns. It 
 
 ## How the Harness is Evolved
 
-LIFE-HARNESS is evolved from training trajectories using a coding agent called Codex. The process works like this. First the frozen model runs on training tasks and produces complete interaction traces. Then Codex reads these traces together with harness design criteria and proposes updates to the appropriate layers. The goals are to cover recurring failure patterns and to detect regression cases where interventions might over-trigger. The prompts and design guide used for evolution are detailed in the paper appendix.
+LIFE-HARNESS is evolved from training trajectories using a coding agent called Codex. The process works like this. First the frozen model runs on training tasks and produces complete interaction traces.
+
+Then Codex reads these traces together with harness design criteria and proposes updates to the appropriate layers. The goals are to cover recurring failure patterns and to detect regression cases where interventions might over-trigger. The prompts and design guide used for evolution are detailed in the paper appendix.
 
 ## Failure Diagnosis
 
-Before building the harness the authors diagnosed failures of a baseline Qwen3-4B-Instruct model on training tasks. They found four categories. Action realization failures happen when the models intent is plausible but not expressed in an executable form like writing a tool call as plain text. Environment contract mismatches happen when the action is syntactically correct but violates the intended tool usage protocol like calling the wrong tool. Trajectory degeneration happens when the agent falls into repetition loops or stagnation. General reasoning failures are the remaining cases where the model makes incorrect decisions despite following the protocol. Across environments the dominant failure mode varies substantially which motivates the multi-layer design.
+Before building the harness the authors diagnosed failures of a baseline Qwen3-4B-Instruct model on training tasks. They found four categories. Action realization failures happen when the models intent is plausible but not expressed in an executable form like writing a tool call as plain text.
 
-## Experimental Results
+Environment contract mismatches happen when the action is syntactically correct but violates the intended tool usage protocol like calling the wrong tool. Trajectory degeneration happens when the agent falls into repetition loops or stagnation. General reasoning failures are the remaining cases where the model makes incorrect decisions despite following the protocol. Across environments the dominant failure mode varies substantially which motivates the multi-layer design.
+
+## Results
 
 The authors evaluate on seven deterministic environments from tau-bench tau2-bench and AgentBench covering household interaction web shopping OS control database tasks and policy-guided business workflows. Across 18 model backbones including instruct models reasoning models and agent-specialized models LIFE-HARNESS improves 116 out of 126 model-environment settings with an average relative gain of 88.5 percent.
 

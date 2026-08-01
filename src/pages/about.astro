@@ -2,19 +2,148 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="About">
+<BaseLayout
+  title="About"
+  description="Akash Popat — Senior Product Designer. About, experience, education and skills."
+>
   <div class="page">
-    <h1>About Me</h1>
-    <p>
-      Hi, I'm Akash.
-      Welcome to my notes.
+    <h1>Akash Popat - Designer</h1>
+    <p class="contact-info">
+      Bangalore, India | Remote in PST timezones | akash.popat27@gmail.com
     </p>
+
+    <section>
+      <h2>About Me</h2>
+      <p>
+        A UX and product designer with 10+ years of experience designing
+        enterprise experiences that help people make sense of complexity.
+      </p>
+    </section>
+
+    <section>
+      <h2>Professional Experience</h2>
+      <div class="job">
+        <h3>Full-Stack UX Design Associate</h3>
+        <p class="job-details">
+          SAP, Digital Experience team | April 2021 – September 2025 | remote-hybrid
+        </p>
+        <ul>
+          <li>
+            Led design strategy for SAP's eCommerce platform, standardizing
+            2,000+ partner pages to boost credibility and engagement—driving a
+            50% rise in PDP traffic, 10% more leads, and 20% more partner
+            extension purchases.
+          </li>
+          <li>
+            Led a comprehensive B2B eCommerce analysis, using heuristics,
+            task-flow audits, and user interviews to identify checkout friction;
+            proposed a redesigned flow that eased cognitive load, improved
+            conversions, and aligned strategy across teams.
+          </li>
+          <li>
+            Designed and shipped private offer capability on complex systems,
+            integrating customers, partners, and SAP sales to enable flexible
+            purchasing, boost adoption, and drive measurable revenue.
+          </li>
+        </ul>
+      </div>
+      <div class="job">
+        <h3>Senior UX design specialist</h3>
+        <p class="job-details">
+          SAP, Fiori Design System team | September 2020 - March 2021 | Remote -
+          hybrid
+        </p>
+        <ul>
+          <li>
+            Conducted comprehensive research on design system portal usage and
+            proposed a new information architecture to improve discoverability,
+            adoption, and usability across internal teams.
+          </li>
+          <li>
+            Designed an end-to-end embedded AI dictation feature for mobile
+            apps, investigating use cases with app teams and creating flexible
+            components to enable broad adoption.
+          </li>
+        </ul>
+      </div>
+      <div class="job">
+        <h3>Senior visual designer</h3>
+        <p class="job-details">Lollipop design studio | Full-time | 2017 - 2020</p>
+        <ul>
+          <li>
+            Product Designer on a variety of projects from small startups to
+            large companies. During my time in the company, I worked with
+            stakeholders, engineers and product managers on implementing new
+            features, redesigning outdated UX experiences and creating an
+            appealing visual appearance of the product.
+          </li>
+        </ul>
+      </div>
+      <div class="job">
+        <h3>Freelance Multidisciplinary Designer</h3>
+        <p class="job-details">2020 - 2025</p>
+        <ul>
+          <li>
+            As a freelancer, my work is of a full-stack designer, whether
+            designing entire websites or creating specific components,
+            independently or as part of a team. I have worked with growing
+            companies as a contractor on product design, web design, and
+            visuals.
+          </li>
+        </ul>
+      </div>
+      <div class="job">
+        <h3>UX Designer, Websites</h3>
+        <p class="job-details">National Instruments | 2015 - 2017</p>
+      </div>
+      <div class="job">
+        <h3>UX design intern</h3>
+        <p class="job-details">National Instruments | 2014-2015</p>
+      </div>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <p>
+        I have a Bachelor's of Engineering (B.E) degree in Electrical
+        Engineering.
+      </p>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <div class="skills-container">
+        <div>
+          <h3>Creative Coding</h3>
+          <ul>
+            <li>Front-end Experimentation (HTML/CSS/ Tailwind CSS)</li>
+            <li>AI-assisted Prototyping</li>
+            <li>Prompt Engineering</li>
+            <li>
+              Generative Design with AI Tools: Github Copilot, Cursor, V0 by
+              Vercel, Gemini CLI, Qwen CLI, Claude Code, Figma Make
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Tools</h3>
+          <ul>
+            <li>Figma</li>
+            <li>Adobe XD</li>
+            <li>Sketch</li>
+            <li>Adobe Photoshop</li>
+            <li>Adobe Illustrator</li>
+          </ul>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
 <style>
-  .page {
-    /*max-width: 760px;*/
-    /*margin: 0 auto;*/
+  h1,
+  h2,
+  h3 {
+    color: var(--accent);
   }
 </style>

@@ -23,7 +23,7 @@ But this his carries a subtle tax: pipeline bubbles. When the first token batch 
 
 ## 2. Tensor Parallelism
 
-When individual transformer layers grow too wide, to fit within a GPUâ€™s memory or compute limits, tensor parallelism takes the stage. Here massive matrix operations are fractured within a single layer across devices. 
+When individual transformer layers grow too wide, to fit within a GPUs memory or compute limits, tensor parallelism takes the stage. Here massive matrix operations are fractured within a single layer across devices. 
 
 Picture a jigsaw puzzle divided among specialists: GPU 1 computes the first quarter of neuron activations, GPU 2 the next, and so forth. These shards must later recombine via all-reduce operations (a collective communication pattern where all devices contribute to a unified result), introducing synchronization overhead. 
 
