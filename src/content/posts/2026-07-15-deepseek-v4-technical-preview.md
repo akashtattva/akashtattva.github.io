@@ -4,13 +4,12 @@ pubDate: 2026-07-15
 ---
 
 
-## What this paper is about
+![Figure 1: Benchmark performance and efficiency of DeepSeek-V4](/assets/img/dsv4_fig1_overview_efficiency.webp)
 
 This paper is a technical preview of DeepSeek-V4, a new family of large language models from DeepSeek-AI. The main story is not only that the models score well on benchmarks. The deeper story is that they try to make million-token context practical. In plain terms, that means the model can read and work with extremely long inputs, such as huge documents, long agent conversations, long chains of tool use, and long internal reasoning, without the usual explosion in cost and memory. The paper presents two models. DeepSeek-V4-Pro is the larger one, with about 1.6 trillion total parameters but only about 49 billion active for each token. DeepSeek-V4-Flash is the smaller and cheaper one, with about 284 billion total parameters and about 13 billion active per token. Both are Mixture-of-Experts models, which means they contain many expert sub-networks and only a few are switched on for any given token. Both claim native support for a context length of one million tokens. The authors also introduce a maximum reasoning effort mode called DeepSeek-V4-Pro-Max, which is the strongest setting of the Pro model and is the one they compare most aggressively against frontier closed models.
 
-![Figure 1: Benchmark performance and efficiency of DeepSeek-V4](/assets/img/dsv4_fig1_overview_efficiency.webp)
 
-*Figure 1 (left) shows DeepSeek-V4-Pro-Max competing with frontier models on benchmarks. (right) shows inference FLOPs and KV cache size versus DeepSeek-V3.2 — V4-Pro uses only ~27% of the FLOPs and ~10% of the KV cache at 1M context.*
+Figure (left) shows DeepSeek-V4-Pro-Max competing with frontier models on benchmarks. (right) shows inference FLOPs and KV cache size versus DeepSeek-V3.2 — V4-Pro uses only ~27% of the FLOPs and ~10% of the KV cache at 1M context.
 
 ## Why long context was the real bottleneck
 
