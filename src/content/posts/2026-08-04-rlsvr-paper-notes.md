@@ -1,6 +1,6 @@
 ---
-title: "DeepsSeek - V4 Notes"
-pubDate: 2026-07-15
+title: "From RLVR to RLSVR: Task Transformation Induces Self-Verifiable Rewards for Open-Ended LLM Self-Improvement"
+pubDate: 2026-08-04
 ---
 
 
