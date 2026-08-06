@@ -85,22 +85,69 @@ Prefix conventions used so far:
 
 ## Step 5b — Convert PNGs to WebP
 
-The prebuild script (`scripts/optimize-images.mjs`) converts all PNGs in `public/assets/img/` to WebP automatically during `npm run build`. **Existing posts reference `.webp` files directly.**
+The prebuild script (`scripts/optimize-images.mjs`) converts PNGs in `public/assets/img/` to WebP. **Existing posts reference `.webp` files directly.** It is incremental: it skips any image whose `.webp` already exists and is at least as new as the source, so re-running does not re-convert unchanged images.
 
 ```bash
-# Generate WebP versions
-npm run build
-```
+# Convert only your new images (recommended — pass your prefix filter)
+node scripts/optimize-images.mjs <prefix>
 
-Or just the prebuild step:
-```bash
+# Or convert everything (unchanged images are skipped anyway)
 node scripts/optimize-images.mjs
 ```
+
+Resolution overrides — use when an 800px-wide WebP is too small to read a dense figure (e.g. a multi-column table or a full-page screenshot):
+
+```bash
+node scripts/optimize-images.mjs <prefix> --max-width=1200 --quality=85
+```
+
+The default is 800px at quality 80. Existing posts keep using 800px; only raise it when the figure is genuinely unreadable, since bigger images cost page weight.
 
 After conversion, delete the source PNGs to avoid stale references:
 ```bash
 rm public/assets/img/<prefix>_*.png
 ```
+
+---
+
+## Step 5c — Crop to the figure panel (recommended for full-page screenshots)
+
+A full-page screenshot usually contains the figure, its caption, and a lot of unrelated margin. Cropping to just the figure panel makes the image much more readable at the same width, and it also resolves the "one page holds several figures" case (e.g. Figures 6 and 7 both sitting on one page) so each figure gets its own clean crop.
+
+**How to find the figure's position without viewing the image.** The model cannot see the PNG, but the JSON parse exposes per-text-item coordinates. Locate the *caption* text item `Figure N. …` and read its `y` (top edge) relative to the page height; the figure panel sits directly above its caption, so that position tells you where to crop:
+
+```bash
+# Extract caption coordinates from the JSON (pages are 0-indexed)
+python -c "
+import json, re
+data = json.load(open('/tmp/paper.json'))
+for p in data['pages']:
+    for ti in p['textItems']:
+        t = ti['text']
+        if re.match(r'^Figure\s+\d+\.', t):   # period anchors on real captions only
+            print(f'page {p[\"page\"]}: {t[:30]} y={ti[\"y\"]:.0f} x={ti[\"x\"]:.0f} w={ti[\"width\"]:.0f}')
+"
+```
+
+Rules of thumb for the crop box (page height ≈ 842pt at 150 DPI):
+- Caption near the **top** of the page → figure occupies roughly the upper 20–60% of the page.
+- Caption near the **bottom** → figure occupies roughly the region above it (e.g. top edge ≈ 10–15%, bottom edge ≈ caption y).
+- **Multiple captions on one page** → the caption `y` values mark the split points; crop each figure between the caption above it and the caption below it.
+- Cross-reference mentions ("Figure 5 plots…", "Figure 2b instantiates…") are body text, not captions — always match the trailing period after the number.
+
+Convert caption pixels to crop percentages: `top% = 100 * (fig_top_y / page_height)`, `height% = 100 * ((caption_y - fig_top_y) / page_height)`. Width is typically the full text column (about 8–92%).
+
+```bash
+# Crop a page screenshot by pixel coordinates
+node scripts/crop-images.mjs <prefix>_<desc>.png <left> <top> <width> <height>
+
+# Or by percentages (0-100), which is layout-independent and usually easier
+node scripts/crop-images.mjs <prefix>_<desc>.png 5 10 80 60 --pct --out <prefix>_fig<N>_<desc>.png
+```
+
+The cropped result is saved as a new PNG (default `<name>_cropped.png`, or whatever `--out` gives you). Delete the original uncropped PNG, then run Step 5b to produce the WebP.
+
+Crop after copying to `public/assets/img/` (the script reads and writes there). Verify the coordinates by opening the PNG once, or measure against the screenshot dimensions reported by `lit screenshot`.
 
 ---
 
@@ -127,3 +174,19 @@ git push
 ```
 
 Only stage the post file and the new images. Do not stage unrelated changes.
+
+---
+
+## Step 8 — Clean up temp files
+
+The process leaves artifacts in the temp directory (`/tmp/shots`, `/tmp/paper.txt`, `/tmp/paper.json`). Clean them up once the post is committed:
+
+```bash
+# Linux / macOS
+rm -rf /tmp/shots /tmp/paper.txt /tmp/paper.json
+
+# Windows (PowerShell)
+Remove-Item -Recurse -Force "$env:TEMP\opencode\ch_shots", "$env:TEMP\opencode\ch.json" -ErrorAction SilentlyContinue
+```
+
+Also delete the parsed text/JSON files if you created them inside the repo (they should not be committed). Keep only the original PDF, the notes post, and the cropped `.webp` images in the repo.
