@@ -1,9 +1,7 @@
 ---
-title: "Continual Harness - Simple Notes"
+title: "Continual Harness - Notes"
 pubDate: 2026-08-06
 ---
-
-# Continual Harness - Simple Notes
 
 # What This Paper Is About
 
