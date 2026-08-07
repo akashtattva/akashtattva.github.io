@@ -39,9 +39,9 @@
 }
 
 :root {
-  --background: #120802;
-  --foreground: #E79C5F;
-  --accent: #C04B10;
+  --background: #1A312C;
+  --foreground: #DCCFC0;
+  --accent: #FFBF00;
   --font-size: 1.1rem;
   --line-height: 1.45em;
   /* Poly Sans Neutral — site-wide sans-serif variable */
