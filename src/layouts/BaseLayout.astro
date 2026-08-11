@@ -1,5 +1,5 @@
 ---
-import { baseUrl } from '../lib/base-url';
+import { baseUrl } from "../lib/base-url";
 
 export interface Props {
   title: string;
@@ -7,11 +7,7 @@ export interface Props {
   image?: string;
 }
 
-const {
-  title,
-  description = "Akash's Notes",
-  image,
-} = Astro.props;
+const { title, description = "Akash's Notes", image } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const base = baseUrl();
 ---
@@ -65,12 +61,11 @@ const base = baseUrl();
             <li class="menu__trigger">Menu ▾</li>
             <li>
               <ul class="menu__dropdown">
-                <li><a href={`${base}about/`}>About</a></li>
+                <!-- <li><a href={`${base}about/`}>About</a></li> -->
                 <li><a href={`${base}lists/`}>Inspiration</a></li>
-            <li><a href={`${base}til/`}>Reading List</a></li>
+                <!-- <li><a href={`${base}til/`}>Reading List</a></li> -->
                 <li><a href={`${base}posts/`}>Posts</a></li>
                 <li><a href={`${base}tags/`}>Tags</a></li>
-                
               </ul>
             </li>
           </ul>
@@ -78,9 +73,9 @@ const base = baseUrl();
 
         <nav class="navigation-menu">
           <ul class="navigation-menu__inner menu--desktop">
-            <li><a href={`${base}about/`}>About</a></li>
+            <!-- <li><a href={`${base}about/`}>About</a></li> -->
             <li><a href={`${base}lists/`}>Inspiration</a></li>
-            <li><a href={`${base}til/`}>Reading List</a></li>
+            <!-- <li><a href={`${base}til/`}>Reading List</a></li> -->
             <li><a href={`${base}posts/`}>Posts</a></li>
             <li><a href={`${base}tags/`}>Tags</a></li>
           </ul>
@@ -98,10 +93,7 @@ const base = baseUrl();
               >© 2026 Powered by <a href="https://astro.build">Astro</a></span
             >
             <span class="separator">::</span>
-            <span
-              >Thanks for visting.
-              </span
-            >
+            <span>Thanks for visting. </span>
           </div>
         </div>
       </footer>
