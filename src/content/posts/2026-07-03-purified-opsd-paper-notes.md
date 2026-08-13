@@ -1,10 +1,8 @@
 ﻿---
-title: "Purified OPSD Paper Notes"
+title: "Purified On-policy Self-distillation Paper Notes"
 pubDate: 2026-07-03
 tags: ["self-distillation", "reasoning", "paper-notes"]
 ---
-
-## Purified OPSD Notes
 
 This paper is about a very specific failure in training reasoning language models. The authors study on-policy self-distillation, called OPSD, for models that use long chain-of-thought reasoning. The main point is that ordinary OPSD looks promising because it lets a model learn from its own generated attempts while a stronger or privileged version of the model gives token-level feedback. But for long reasoning models, the paper finds that this setup can quietly damage the very behavior that makes these models good at reasoning. Instead of improving the model's ability to think through a problem, standard OPSD often teaches it to imitate reference-specific shortcuts.
 

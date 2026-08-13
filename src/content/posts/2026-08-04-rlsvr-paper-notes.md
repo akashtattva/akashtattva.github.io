@@ -3,25 +3,29 @@ title: "From RLVR to RLSVR: Task Transformation Induces Self-Verifiable Rewards 
 pubDate: 2026-08-04
 ---
 
-
-# Notes on "From RLVR to RLSVR: Task Transformation Induces Self-Verifiable Rewards for Open-Ended LLM Self-Improvement"
-
-
 The paper is about a new way to train models to get better at tasks that have no single correct answer, like creative writing and summarization, without needing a human, an external judge, or a reward model to tell the model whether its output is good, by turning the open-ended task into a small game in which the model can score itself with a fully verifiable rule.
 
-## The background problem the paper starts with
 
-In recent years, a training technique called Reinforcement Learning with Verifiable Rewards (shortened to RLVR) became extremely popular and successful. It is the engine behind famous reasoning models like OpenAI o1 and DeepSeek-R1. The idea of RLVR is simple: let the model produce many candidate answers, then check each answer against a known correct answer using a computer program, and give a reward if the answer matches and no reward if it does not. Because the checking is done by a deterministic rule, the training signal is unbiased, unlimited, essentially free, and can be generated automatically. This lets you train models at a very large scale without any human labeling.
 
-The catch is that RLVR only works when a correct answer actually exists and can be checked by a program. That is true for mathematics, where you can compare against the right number or a proof, and for coding, where you can run unit tests. But it is completely untrue for open-ended tasks. If you ask a model to write a story, summarize a report, or answer a vague research question, there is no single right answer. Quality is a subjective matter. This is sometimes described as the task lacking a verifier. So RLVR, despite its power, is trapped in the narrow world of math and code and cannot be used for the much larger universe of open-ended language tasks.
+In recent years, Reinforcement Learning with Verifiable Rewards became extremely popular and successful. It is the engine behind famous reasoning models like OpenAI o1 and DeepSeek-R1. The idea of RLVR is simple: let the model produce many candidate answers, then check each answer against a known correct answer using a computer program, and give a reward if the answer matches and no reward if it does not. Because the checking is done by a deterministic rule, the training signal is unbiased, unlimited, essentially free, and can be generated automatically. This lets you train models at a very large scale without any human labeling.
+
+RLVR only works when a correct answer actually exists and can be checked by a program. That is true for mathematics, where you can compare against the right number or a proof, and for coding, where you can run unit tests. But it is completely untrue for open-ended tasks.
+
+If you ask a model to write a story, summarize a report, or answer a vague research question, there is no single right answer. Quality is a subjective matter. This is sometimes described as the task lacking a verifier. So RLVR, despite its power, is trapped in the narrow world of math and code and cannot be used for the much larger universe of open-ended language tasks.
 
 ## How people previously tried to solve this problem, and why those attempts were unsatisfying
 
-Since open-ended tasks have no verifiable correct answer, earlier work replaced the verifier with something that approximates human judgment. One family of methods uses human preference signals, such as RLHF and DPO, where people rank model outputs and the model learns to match those preferences. Another family uses a big language model as a judge, where an LLM is asked to decide which output is better, often called LLM-as-a-Judge. There are also self-rewarding models, where the model grades its own output. These methods all broaden the reach of reinforcement learning, but they bring real problems. A learned reward model or an LLM judge can have systematic bias and can never be better at judging than the judge model itself, so the model's final capability is capped by the competence of its evaluator. Judges also cost extra compute for every single evaluation during training. Most importantly, all of these approaches try to directly approximate the unverifiable quality function, which is fundamentally hard. The paper argues that this is the root cause of the failure: you should not approximate the missing label at all, you should change the task so the label exists.
+Since open-ended tasks have no verifiable correct answer, earlier work replaced the verifier with something that approximates human judgment.
 
-## The key idea borrowed from self-supervised learning
+One family of methods uses human preference signals, such as RLHF and DPO, where people rank model outputs and the model learns to match those preferences.
 
-To escape this trap, the authors look to a much older and very successful idea in machine learning called self-supervised learning. In self-supervised learning, you do not need human annotations. Instead, you invent a so-called pretext task whose labels are generated automatically from the data itself. For example, masked language modeling hides some words in a sentence and asks the model to predict them, and the missing words themselves are the labels. Contrastive learning shows the model two related views of the same data and two unrelated views, and the labels are just whether the two views belong together. Jigsaw puzzles ask a model to reassemble shuffled image patches. In every case, the pretext task is not the ultimate task the model cares about, yet solving it teaches representations and capabilities that transfer to real tasks. The deep lesson the paper takes from this is that you do not need the final task to be directly verifiable. You can build a proxy objective that produces its own supervision automatically, as long as that proxy objective shares enough capability with the real task.
+Another family uses a big language model as a judge, where an LLM is asked to decide which output is better, often called LLM-as-a-Judge. There are also self-rewarding models, where the model grades its own output. These methods all broaden the reach of reinforcement learning, but they bring real problems. A learned reward model or an LLM judge can have systematic bias and can never be better at judging than the judge model itself, so the model's final capability is capped by the competence of its evaluator. Judges also cost extra compute for every single evaluation during training. All of these approaches try to directly approximate the unverifiable quality function, which is fundamentally hard. The paper argues that this is the root cause of the failure: you should not approximate the missing label at all, you should change the task so the label exists.
+
+## The idea borrowed from self-supervised learning
+
+To escape this trap, the authors look to a much older and very successful idea in machine learning called self-supervised learning.
+
+In self-supervised learning, you do not need human annotations. Instead, you invent a so-called pretext task whose labels are generated automatically from the data itself. For example, masked language modeling hides some words in a sentence and asks the model to predict them, and the missing words themselves are the labels. Contrastive learning shows the model two related views of the same data and two unrelated views, and the labels are just whether the two views belong together. Jigsaw puzzles ask a model to reassemble shuffled image patches. In every case, the pretext task is not the ultimate task the model cares about, yet solving it teaches representations and capabilities that transfer to real tasks. The deep lesson the paper takes from this is that you do not need the final task to be directly verifiable. You can build a proxy objective that produces its own supervision automatically, as long as that proxy objective shares enough capability with the real task.
 
 ## The main proposal: RLSVR
 
@@ -35,7 +39,7 @@ The transformation works through four steps. First, latent-variable injection: t
 
 The reward that comes out of this is called self-verifiable. It is a deterministic function of the environment-assigned hidden variable and the observed interaction outcomes. It needs no human annotation, no learned reward model, and no external judge. The crucial property is that ground truth exists by construction, because the environment itself sampled the hidden variable, so any prediction about it can be checked exactly, just like a math verifier checks a final answer. In this framing, the transformation plays the role of the pretext task, the hidden latent variable plays the role of the automatically generated label, and ordinary RLVR machinery applies directly to the transformed environment.
 
-## SpyRL: the concrete instantiation
+## SpyRL
 
 The authors turn the abstract RLSVR idea into a practical method called SpyRL, short for Self-PlaY Reinforcement Learning. It is inspired by the social deduction party game "Who Is the Spy?". If you have ever played the game, you know the setup: several players are told a secret word, except one player, the spy, who is given a very similar but different word. Everyone describes their word, and the group votes on who they think the spy is. The spy tries to blend in, and the civilians try to detect the odd one out.
 
