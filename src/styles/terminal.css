@@ -3,11 +3,11 @@
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    Note: preconnect must be in HTML; CSS cannot add preload/preconnect. */
-@import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 
 @font-face {
-  font-family: 'Roboto Mono';
-  src: url('/fonts/RobotoMono-Regular.ttf') format('truetype');
+  font-family: "Roboto Mono";
+  src: url("/fonts/RobotoMono-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: block;
@@ -15,47 +15,50 @@
 
 /* Quilon: Regular and Medium variants */
 @font-face {
-  font-family: 'Quilon';
-  src: url('/fonts/Quilon-Regular.otf') format('opentype');
+  font-family: "Quilon";
+  src: url("/fonts/Quilon-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: block;
 }
 
 @font-face {
-  font-family: 'Quilon';
-  src: url('/fonts/Quilon-Medium.otf') format('opentype');
+  font-family: "Quilon";
+  src: url("/fonts/Quilon-Medium.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
   font-display: block;
 }
 
 @font-face {
-  font-family: 'Poly Sans Neutral';
-  src: url('/fonts/polysanstrial-neutral.otf') format('opentype');
+  font-family: "Poly Sans Neutral";
+  src: url("/fonts/polysanstrial-neutral.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: block;
 }
 
 @font-face {
-  font-family: 'Sagittaire Display';
-  src: url('/fonts/Sagittaire%20Display%20SemiBold.otf') format('opentype');
+  font-family: "Sagittaire Display";
+  src: url("/fonts/Sagittaire%20Display%20SemiBold.otf") format("opentype");
   font-weight: 600;
   font-style: normal;
   font-display: block;
 }
 
 :root {
-  --background: #1A312C;
-  --foreground: #DCCFC0;
-  --accent: #FFBF00;
+  --background: #f1efec;
+  --foreground: #393e46;
+  --accent: #222831;
   --font-size: 1.1rem;
   --line-height: 1.45em;
   /* Poly Sans Neutral — site-wide sans-serif variable */
-  --font-sans: 'Poly Sans Neutral', ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-sans:
+    "Poly Sans Neutral", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
   /* Sagittaire Display — headings */
-  --font-display: 'Sagittaire Display', Georgia, 'Times New Roman', serif;
+  --font-display: "Sagittaire Display", Georgia, "Times New Roman", serif;
 }
 
 /* Helper utility: use var(--font-sans) or the .font-sans class */
@@ -76,7 +79,7 @@ html {
 }
 
 body {
-  font-family: 'Poly Sans Neutral', sans-serif !important;
+  font-family: "Poly Sans Neutral", sans-serif !important;
 
   font-synthesis: none;
   font-size: 18px !important;
@@ -114,7 +117,6 @@ body {
   position: relative;
   z-index: 1;
 }
-
 
 h1,
 h2,
@@ -228,9 +230,8 @@ select:active {
 }
 
 select {
-  background-image: linear-gradient(45deg,
-      transparent 50%,
-      var(--foreground) 50%),
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--foreground) 50%),
     linear-gradient(135deg, var(--foreground) 50%, transparent 50%);
   background-position: calc(100% - 20px), calc(100% - 15px);
   background-size:
@@ -311,8 +312,7 @@ ol li {
 
 code,
 kbd {
-  font-family:
-    "Roboto Mono", monospace !important;
+  font-family: "Roboto Mono", monospace !important;
   font-feature-settings: normal;
   background: color-mix(in srgb, var(--foreground) 5%, transparent);
   color: color-mix(in srgb, var(--foreground) 5%, var(--accent));
