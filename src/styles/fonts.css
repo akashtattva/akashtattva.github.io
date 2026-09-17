@@ -1,5 +1,19 @@
-/* Font loading is handled in terminal.css */
-/* This file is kept for compatibility with Hugo theme structure */
+/* Heading font: Fraunces (modern serif, same style as slides) */
+:root {
+  --font-display: "Fraunces", Georgia, serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display) !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+}
 
 /* Additional font-related styles */
 .font-light {
