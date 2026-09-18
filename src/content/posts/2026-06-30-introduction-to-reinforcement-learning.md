@@ -1,5 +1,5 @@
 ﻿---
-title: "Introduction to Reinforcement Learning Notes"
+title: "Introduction to <em>Reinforcement Learning</em> Notes"
 pubDate: 2026-06-30
 tags: ["reinforcement-learning", "notes"]
 ---

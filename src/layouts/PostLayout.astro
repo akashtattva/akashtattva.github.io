@@ -23,11 +23,15 @@ const {
   tags = [],
 } = Astro.props;
 const base = baseUrl();
+// Frontmatter titles may contain inline HTML (e.g. <em> for italics).
+// Render it as HTML in the heading, but strip tags for <title>/meta/alt.
+const stripTags = (s: string) => s.replace(/<[^>]*>/g, "");
+const plainTitle = stripTags(title);
 ---
 
-<BaseLayout title={title} description={description} image={image}>
+<BaseLayout title={plainTitle} description={description} image={image}>
   <article>
-    <h1 class="post-title">{title}</h1>
+    <h1 class="post-title" set:html={title} />
 
     <div class="post-meta">
       <time>
@@ -55,7 +59,7 @@ const base = baseUrl();
     {
       image && (
         <figure class="post-cover">
-          <img src={image} alt={title} />
+          <img src={image} alt={plainTitle} />
         </figure>
       )
     }

@@ -20,6 +20,8 @@ export async function getStaticPaths() {
 
 const { post, prevPost, nextPost } = Astro.props;
 const { Content } = await render(post);
+// Titles may contain inline HTML (<em>); pagination buttons render plain text.
+const stripTags = (s: string) => s.replace(/<[^>]*>/g, "");
 const base = baseUrl();
 ---
 
@@ -36,7 +38,7 @@ const base = baseUrl();
         prevPost && (
           <>
             <a href={`${base}posts/${prevPost.id}/`} class="button inline prev">
-              &lt; <span class="button__text">{prevPost.data.title}</span>
+              &lt; <span class="button__text">{stripTags(prevPost.data.title)}</span>
             </a>
             {prevPost && nextPost && <span> . </span>}
           </>
@@ -45,7 +47,7 @@ const base = baseUrl();
       {
         nextPost && (
           <a href={`${base}posts/${nextPost.id}/`} class="button inline next">
-            <span class="button__text">{nextPost.data.title}</span> &gt;
+            <span class="button__text">{stripTags(nextPost.data.title)}</span> &gt;
           </a>
         )
       }
