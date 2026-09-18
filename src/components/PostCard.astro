@@ -18,8 +18,7 @@ const plainTitle = stripTags(post.data.title);
 
 <article class="post on-list">
   <h2 class="post-title">
-    <a href={postUrl} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener" : undefined}>
-      {plainTitle}
+    <a href={postUrl} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener" : undefined} set:html={post.data.title}>
     </a>
   </h2>
   <div class="post-meta">
