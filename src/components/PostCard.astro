@@ -11,12 +11,15 @@ const { post } = Astro.props;
 const base = baseUrl();
 const postUrl = post.data.externalLink || `${base}posts/${post.id}/`;
 const isExternal = !!post.data.externalLink;
+// Titles may contain inline HTML (<em>); cards render plain text.
+const stripTags = (s: string) => s.replace(/<[^>]*>/g, "");
+const plainTitle = stripTags(post.data.title);
 ---
 
 <article class="post on-list">
   <h2 class="post-title">
     <a href={postUrl} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener" : undefined}>
-      {post.data.title}
+      {plainTitle}
     </a>
   </h2>
   <div class="post-meta">
@@ -38,7 +41,7 @@ const isExternal = !!post.data.externalLink;
   )}
   {post.data.image && (
     <figure class="post-cover">
-      <img src={post.data.image} alt={post.data.title} />
+      <img src={post.data.image} alt={plainTitle} />
     </figure>
   )}
   {post.data.description && (

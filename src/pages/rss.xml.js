@@ -1,5 +1,9 @@
 import { getCollection } from 'astro:content';
 
+function stripTags(value = '') {
+  return String(value).replace(/<[^>]*>/g, '');
+}
+
 function escapeXml(value = '') {
   return String(value)
     .replaceAll('&', '&amp;')
@@ -19,7 +23,7 @@ export async function GET(context) {
     const link = new URL(`/posts/${post.id}/`, site).toString();
     return `
       <item>
-        <title>${escapeXml(post.data.title)}</title>
+        <title>${escapeXml(stripTags(post.data.title))}</title>
         <link>${escapeXml(link)}</link>
         <guid>${escapeXml(link)}</guid>
         <pubDate>${post.data.pubDate.toUTCString()}</pubDate>
