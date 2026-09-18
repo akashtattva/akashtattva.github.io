@@ -15,6 +15,17 @@ h6 {
   line-height: 1.04;
 }
 
+/* Italic words inside headings (frontmatter <em>) match the slides:
+   lighter weight for contrast against the 600 heading. */
+h1 em,
+h2 em,
+h3 em,
+h4 em,
+h5 em,
+h6 em {
+  font-weight: 400;
+}
+
 /* Additional font-related styles */
 .font-light {
   font-weight: 300;
