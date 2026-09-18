@@ -1,5 +1,5 @@
 ---
-title: "From RLVR to RLSVR: Task Transformation Induces Self-Verifiable Rewards for Open-Ended LLM Self-Improvement"
+title: "From RLVR to RLSVR: Task Transformation Induces <em>Self-Verifiable Rewards</em> for <em>Open-Ended LLM Self-Improvement</em>"
 pubDate: 2026-08-04
 ---
 

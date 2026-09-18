@@ -4,11 +4,11 @@ pubDate: 2026-06-30
 tags: ["reinforcement-learning", "notes"]
 ---
 
-## What Is Reinforcement Learning
+## What Is *Reinforcement Learning*
 
 Reinforcement Learning or RL is a paradigm where an agent learns to make sequential decisions by interacting with an environment. It receives rewards as feedback and optimizes its policy to maximize the total cumulative reward over time. Unlike supervised learning which requires labeled input-output pairs, RL discovers optimal behavior through trial and error. The agent tries things, sees what happens, and learns from the outcomes without being told the correct answer for each situation.
 
-## The Markov Decision Process
+## The *Markov Decision Process*
 
 The Markov Decision Process or MDP is the mathematical framework that formalizes the RL problem. It is defined as a five-tuple consisting of the state space which includes all possible configurations of the environment, the action space which includes all actions available to the agent, the transition function which gives the probability of reaching a new state from the current state after taking a particular action, the reward function which gives immediate scalar feedback for a transition, and the discount factor which determines how much future rewards are valued relative to immediate ones. The Markov property states that the future depends only on the current state and not on the history of how the agent got there. This makes the problem tractable because the agent does not need to remember everything that happened before.
 

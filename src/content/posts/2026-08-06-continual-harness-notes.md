@@ -1,5 +1,5 @@
 ---
-title: "Continual Harness - Notes"
+title: "<em>Continual Harness</em> - giving AI agents the ability to <em>improve themselves</em>"
 pubDate: 2026-08-06
 ---
 
@@ -11,7 +11,7 @@ Over time the agent gets better and better at the game, and all of this improvem
 
 the three ways harness refinement happens: with a human in the loop, by the model refining its own harness, and by jointly training the model and the harness together. It captures the whole arc of the paper in one diagram.
 
-## Observation about how AI coding assistants work
+## *Observation* about how coding assistants work
 
 Tools like Claude Code and OpenCode wrap a model with extra scaffolding: they give the model access to tools like running commands, a memory to carry state across long interactions, and planning structures. This scaffolding is called an agentic harness. This kind of harness has become standard for coding agents, and it works very well for writing software.
 
@@ -19,7 +19,7 @@ But no equivalent exists for embodied agents. An embodied agent is one that perc
 
 So the problem the paper tackles is this: coding agents have harnesses that make them effective, but game-playing or embodied agents do not. Building a good harness for a game requires a lot of hand-crafted domain knowledge, which is expensive and does not transfer to new games or new tasks. They want to remove that hand-crafting and let the agent build its own harness automatically.
 
-## The Minimal Environment Interface
+## The *Minimal Environment Interface*
 
 The authors work with three classic Pokémon games: Pokémon Red, Pokémon Crystal, and Pokémon Emerald. These are long, turn-based role-playing games. They require navigating large overworld maps, talking to non-player characters, fighting turn-based battles, managing an inventory and a party of creatures, and completing gated objectives like winning badges and progressing the plot. Each game run is extremely long, stretching over many hours of gameplay and thousands or even hundreds of thousands of button presses.
 
