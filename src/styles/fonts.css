@@ -23,10 +23,10 @@ h3 em,
 h4 em,
 h5 em,
 h6 em {
-  font-weight: 400;
+  font-weight: 300;
   /* Accent-colored like the slide deck. Uses the theme accent (not the
      slides' terracotta) so it stays readable on the dark background. */
-  color: var(--accent);
+  color: var(--foreground);
 }
 
 /* Additional font-related styles */
