@@ -48,10 +48,16 @@ Astro 6 static site, bun. Production base is `/` (`astro.config.mjs`). Module ma
 - Figures live in `public/assets/img/` and are referenced as `/assets/img/<name>.webp`. PNGs are intermediates; delete them before committing.
 - Convert only new images: `bun run optimize-images <prefix>`. The script is incremental and skips existing WebPs.
 
+## Performance
+
+- Fonts are self-hosted WOFF2 in `public/fonts/`; `BaseLayout.astro` preloads the body and heading faces. Do not add Google Fonts or render-blocking font imports.
+- Markdown images get `loading="lazy"` from `rehypeLazyImages` in `astro.config.mjs`; the first image stays eager with high fetch priority.
+- Do not add third-party embeds to `PostLayout.astro` unless a post actually uses them.
+
 ## Styles
 
-- `terminal.css` — color tokens (`--background`, `--foreground`, `--accent`, around lines 143–149) and body font/@font-face.
-- `fonts.css` — heading font (Fraunces) and heading rules.
+- `terminal.css` — color tokens (`--background`, `--foreground`, `--accent`) and body font/local font faces.
+- `fonts.css` — local Fraunces heading faces and heading rules.
 - `main.css` — base layout; `post.css` — article body; the other files are component-specific.
 - All are imported in `BaseLayout.astro` around lines 166–180; order matters. Use CSS variables, not raw colors.
 

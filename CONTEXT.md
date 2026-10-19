@@ -3,9 +3,10 @@
 ## Rendering
 
 Astro 6 static site, no adapter. `src/pages/` supplies routes; `BaseLayout.astro`
-wraps every page, imports all CSS, and renders the header, two nav lists, and
-footer. `PostLayout.astro` wraps blog posts; `PageLayout.astro` wraps Markdown
-pages.
+wraps every page, imports all CSS, preloads the two first-screen fonts, and
+renders the header, two nav lists, and footer. `PostLayout.astro` wraps blog
+posts; `PageLayout.astro` wraps Markdown pages. Markdown images are lazy-loaded
+by `rehypeLazyImages` in `astro.config.mjs`.
 
 ## Routes
 
@@ -36,8 +37,8 @@ pages.
 
 ## Styles
 
-- `terminal.css` — color tokens and body font/@font-face.
-- `fonts.css` — heading font (Fraunces) and heading rules.
+- `terminal.css` — color tokens, body font, and local font faces.
+- `fonts.css` — local Fraunces heading faces and heading rules.
 - `main.css` — base layout; `post.css` — article body.
 - `header.css`, `menu.css`, `footer.css`, `buttons.css`, `pagination.css`,
   `code.css`, `syntax.css`, `gist.css`, `terms.css` — component-specific.

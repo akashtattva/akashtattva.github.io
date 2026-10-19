@@ -24,6 +24,20 @@ const base = baseUrl();
       href={`${base}favicon.ico`}
     />
     <meta name="generator" content={Astro.generator} />
+    <link
+      rel="preload"
+      href={`${base}fonts/Geist_Pixel/GeistPixel-Latin.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={`${base}fonts/Fraunces/Fraunces-Latin.woff2`}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -41,12 +55,6 @@ const base = baseUrl();
     {image && <meta name="twitter:image" content={new URL(image, Astro.url)} />}
 
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&display=swap"
-      rel="stylesheet"
-    />
     <link
       rel="alternate"
       type="application/rss+xml"

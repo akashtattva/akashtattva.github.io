@@ -40,7 +40,12 @@ const plainTitle = stripTags(post.data.title);
   )}
   {post.data.image && (
     <figure class="post-cover">
-      <img src={post.data.image} alt={plainTitle} />
+      <img
+        src={post.data.image}
+        alt={plainTitle}
+        loading="lazy"
+        decoding="async"
+      />
     </figure>
   )}
   {post.data.description && (

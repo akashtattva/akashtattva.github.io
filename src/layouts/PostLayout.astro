@@ -59,7 +59,13 @@ const plainTitle = stripTags(title);
     {
       image && (
         <figure class="post-cover">
-          <img src={image} alt={plainTitle} />
+          <img
+            src={image}
+            alt={plainTitle}
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
         </figure>
       )
     }
@@ -125,11 +131,4 @@ const plainTitle = stripTags(title);
       });
     });
   </script>
-
-  <!-- Twitter embed script -->
-  <script
-    is:inline
-    async
-    src="https://platform.twitter.com/widgets.js"
-    charset="utf-8"></script>
 </BaseLayout>
