@@ -1,90 +1,76 @@
 # AI Agent Onboarding Guide
 
-## Project Overview
-
-This is a static website/blog built with [Astro](https://astro.build) v6, using the "Terminal" theme (ported from Hugo). It uses TypeScript and Markdown for content.
+Astro 6 static site, bun. Production base is `/` (`astro.config.mjs`). Module map: `CONTEXT.md`.
 
 ## Quick Start
 
-- **Package Manager**: bun (pinned in `package.json` `packageManager`)
 - **Install**: `bun install`
-- **Development Server**: `bun run dev` (Runs locally)
-- **Build**: `bun run build` (Builds for production)
-- **Type Check**: `bun run check`
+- **Dev**: `bun run dev`
+- **Build**: `bun run build` (`astro check && astro build`)
+- **Test**: `bun run test` (build smoke test; does not run `astro check`)
+- **Type check**: `bun run check`
 
-## Project Structure
+## Map — open only what the task needs
 
-- `src/content/posts/`: **Markdown content lives here.** This is where blog posts are stored.
-- `src/pages/`: Astro file-based routing.
-  - `index.astro`: Homepage.
-  - `posts/[...slug].astro`: Dynamic route for individual posts.
-- `src/layouts/`:
-  - `BaseLayout.astro`: The main HTML shell (metadata, header, footer). Includes global CSS.
-- `src/styles/`: Plain CSS files. Imported globally via `BaseLayout.astro`.
-- `astro.config.mjs`: Project configuration. Note the `base` path logic for GitHub Pages.
+| Path | What lives there | Open when |
+|---|---|---|
+| `src/content/posts/` | `.md` posts; filename is the URL slug | adding/editing a post |
+| `src/content.config.ts` | post frontmatter schema (SSOT) | changing metadata |
+| `src/pages/posts/[...slug].astro` | post route, prev/next | post URLs/pagination |
+| `src/pages/index.astro`, `src/pages/posts/index.astro` | home + post list | ordering/listing |
+| `src/pages/tags/` | tag index + per-tag pages | tags |
+| `src/pages/about.astro`, `lists.md`, `til.md` | standalone pages (both patterns) | adding a page |
+| `src/layouts/BaseLayout.astro` | shell, **two** nav lists, footer, CSS imports | nav/footer/meta |
+| `src/layouts/PostLayout.astro` | post chrome, title, optional cover | post presentation |
+| `src/layouts/PageLayout.astro` | Markdown page wrapper | Markdown pages |
+| `src/components/` | `PostCard`, `FormattedDate` | cards/dates |
+| `src/lib/base-url.ts` | `baseUrl()` helper | internal links |
+| `src/styles/` | 13 CSS files; map below | styling |
+| `public/assets/img/` | `.webp` post figures | images |
+| `public/fonts/` | font files | fonts |
+| `scripts/optimize-images.mjs`, `scripts/crop-images.mjs` | image conversion/cropping | figures |
+| `ATTACH-DIAGRAMS-PROCESS.md` | paper → figure pipeline | attaching diagrams |
+| `.github/workflows/deploy.yml` | GitHub Pages build/deploy | deploy failures |
+| `src/__tests__/build.test.ts` | build smoke test | verification |
 
-## Content Management
+## Post conventions
 
-To create a new blog post, add a `.md` file to `src/content/posts/`.
+- Filename: `YYYY-MM-DD-<kebab-title>.md`. The filename without `.md` is the URL slug: `/posts/<filename>/`.
+- `.md` only — no MDX. Schema: `src/content.config.ts` (there is no `src/content/config.ts`).
+- Start the body at `##`; the layout renders the frontmatter `title` as the page `h1`.
+- No cover images on this site. Do not add `image:` unless explicitly asked.
+- `draft: true` hides a post from lists, RSS, and the sitemap. `tags` auto-create `/tags/<tag>/`. Titles may contain inline HTML such as `<em>`.
+- Do not copy frontmatter from another post; use the schema.
 
-### Frontmatter Schema
+## Diagrams and images
 
-Defined in `src/content.config.ts`.
+- Read `ATTACH-DIAGRAMS-PROCESS.md` end to end before attaching figures.
+- Figures live in `public/assets/img/` and are referenced as `/assets/img/<name>.webp`. PNGs are intermediates; delete them before committing.
+- Convert only new images: `bun run optimize-images <prefix>`. The script is incremental and skips existing WebPs.
 
-```yaml
----
-title: "My New Post"           # Required (string)
-pubDate: 2023-10-27            # Required (date)
-description: "Short summary"   # Optional (string)
-author: "Name"                 # Optional (string)
-tags: ["tag1", "tag2"]         # Optional (array of strings)
-draft: false                   # Optional (boolean, default: false)
-image: "/path/to/image.jpg"    # Optional (string)
----
-```
+## Styles
 
-## Styling
+- `terminal.css` — color tokens (`--background`, `--foreground`, `--accent`, around lines 143–149) and body font/@font-face.
+- `fonts.css` — heading font (Fraunces) and heading rules.
+- `main.css` — base layout; `post.css` — article body; the other files are component-specific.
+- All are imported in `BaseLayout.astro` around lines 166–180; order matters. Use CSS variables, not raw colors.
 
-- **Method**: Global CSS files. 
-- **Location**: `src/styles/`.
-- **Theme**: "Terminal" aesthetic. Key colors and variables are likely in `terminal.css` or `main.css`.
-- **Modification**: To change styles, edit the CSS files in `src/styles/`. They are automatically injected into `BaseLayout.astro`.
+## Deploy
 
-## Technical Constraints & Notes
+- GitHub Pages via `.github/workflows/deploy.yml` on push to `main`; live at `https://akashtattva.github.io`.
+- Check: `gh run list`, `gh run watch <run-id>`, `gh run view <run-id> --log-failed`.
+- Check the Pages source/build type: `gh api repos/akashtattva/akashtattva.github.io/pages`.
+- A failed Pages build leaves the previous deployment live. Hard-refresh before assuming the deploy failed.
+- The workflow runs `bun run build`, not `bun run test`.
 
-1. **Base Path**: The site is configured to run on a subpath in production (`/astro-theme-terminal`).
-  - Use `import.meta.env.BASE_URL` when constructing internal links in components if not using Astro's standard `href`.
-  - The `BaseLayout` already handles some of this logic.
-2. **Images**: Public assets go in `public/`. Reference them as `/filename.png` (or with the base path prefix if hardcoding HTML).
-3. **Menu**: The navigation menu is defined in `BaseLayout.astro`. It is not dynamic (except for the mobile dropdown logic).
+## Standalone pages
 
-## Common Tasks
+- `.astro` for layout-heavy pages; `.md` + `PageLayout` for prose.
+- Update **both** nav lists in `BaseLayout.astro` (mobile and desktop), and add the path to `src/pages/sitemap.xml.js`.
+- URLs use a trailing slash. Full recipe: `docs/ADD-PAGE.md`.
 
-- **Add a Page**: Create a `.astro` file in `src/pages/`.
-- **Update Menu**: Edit the `<header>` section in `src/layouts/BaseLayout.astro`.
-- **Change Footer**: Edit the `<footer>` section in `src/layouts/BaseLayout.astro`.
+## Common tasks
 
-## Creating Standalone Pages
-
-To add a standalone page (like About, Contact, Lists) that is part of the main menu but separate from blog posts:
-
-1. **Create Content**: Create a markdown file in `src/pages/` (e.g., `src/pages/mylife.md`).
-2. **Use PageLayout**: Add the following frontmatter to the file:
-  ```markdown
-    ---
-    layout: ../layouts/PageLayout.astro
-    title: My Life
-    description: A description of the page
-    ---
-  ```
-3. **Update Menu**: Add a link to `src/layouts/BaseLayout.astro` in the `<nav>` section.
-  ```html
-    <li><a href={`${base}mylife/`}>My Life</a></li>
-  ```
-
-This approach ensures:
-
-- **No Logic Required**: You don't need to filter these pages out of the blog post index.
-- **Clean URLs**: `src/pages/mylife.md` -> `/mylife`.
-- **Separation**: Keeps blog posts in `content/` and standalone pages in `pages/`.
-
+- **Update menu**: edit both nav lists in `BaseLayout.astro`.
+- **Change footer**: edit the `<footer>` section in `BaseLayout.astro`.
+- **Add a post**: follow “Post conventions” above.

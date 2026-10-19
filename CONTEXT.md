@@ -1,0 +1,56 @@
+# Context / module map
+
+## Rendering
+
+Astro 6 static site, no adapter. `src/pages/` supplies routes; `BaseLayout.astro`
+wraps every page, imports all CSS, and renders the header, two nav lists, and
+footer. `PostLayout.astro` wraps blog posts; `PageLayout.astro` wraps Markdown
+pages.
+
+## Routes
+
+- `index.astro` — home page with recent posts.
+- `posts/index.astro` — all posts.
+- `posts/[...slug].astro` — individual post; `post.id` is the filename without
+  `.md`, so the URL is `/posts/<filename>/`.
+- `tags/index.astro`, `tags/[tag].astro` — tag index and per-tag pages.
+- `about.astro`, `lists.md`, `til.md` — standalone pages.
+- `rss.xml.js`, `sitemap.xml.js`, `404.astro`.
+
+## Components and lib
+
+- `PostCard.astro` — post cards in lists.
+- `FormattedDate.astro` — date rendering.
+- `src/lib/base-url.ts` — `baseUrl()`, the helper for internal links.
+
+## Content
+
+- `src/content/posts/*.md` — one Markdown file per post; date-prefixed filename
+  is the slug. No MDX.
+- `src/content.config.ts` — frontmatter schema and the `posts` collection.
+- `draft: true` hides a post from lists, RSS, and the sitemap.
+- Tags auto-create `/tags/<tag>/`.
+
+## Styles
+
+- `terminal.css` — color tokens and body font/@font-face.
+- `fonts.css` — heading font (Fraunces) and heading rules.
+- `main.css` — base layout; `post.css` — article body.
+- `header.css`, `menu.css`, `footer.css`, `buttons.css`, `pagination.css`,
+  `code.css`, `syntax.css`, `gist.css`, `terms.css` — component-specific.
+- Import order lives in `BaseLayout.astro` (around lines 166–180).
+
+## Scripts and assets
+
+- `scripts/optimize-images.mjs` — PNG/JPG → WebP, incremental; run with a prefix.
+- `scripts/crop-images.mjs` — crop figure panels; reads/writes
+  `public/assets/img/`.
+- `public/assets/img/` — post figures (`.webp`).
+- `public/fonts/` — font files.
+
+## Verification and deploy
+
+- `bun run build` — `astro check` plus `astro build`.
+- `bun run test` — Vitest build smoke test (`src/__tests__/build.test.ts`); it
+  runs `astro build` but not `astro check`.
+- `.github/workflows/deploy.yml` — GitHub Pages deploy on push to `main`.

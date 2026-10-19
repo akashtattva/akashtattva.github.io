@@ -6,6 +6,12 @@ dist/
 # dependencies
 node_modules/
 
+# local working files (paper parsing/screenshots)
+tmp_shots/
+
+# WezTerm socket files that appear in the cwd
+gui-sock-*
+
 # logs
 npm-debug.log*
 yarn-debug.log*
