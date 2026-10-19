@@ -46,8 +46,9 @@ wrapper.
 1. Add the link to **both** nav lists in `src/layouts/BaseLayout.astro`:
    - mobile dropdown (around lines 66–77)
    - desktop nav (around lines 80–88)
-2. Add the path to `staticPaths` in `src/pages/sitemap.xml.js` (around line 25).
-3. Use a trailing slash in links: `/<slug>/`.
+2. Use a trailing slash in links: `/<slug>/`.
+
+No sitemap entry is needed; `@astrojs/sitemap` includes built pages automatically.
 
 ## Verify
 

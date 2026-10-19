@@ -24,7 +24,7 @@ Astro 6 static site, bun. Production base is `/` (`astro.config.mjs`). Module ma
 | `src/layouts/PostLayout.astro` | post chrome, title, optional cover | post presentation |
 | `src/layouts/PageLayout.astro` | Markdown page wrapper | Markdown pages |
 | `src/components/` | `PostCard`, `FormattedDate` | cards/dates |
-| `src/lib/base-url.ts` | `baseUrl()` helper | internal links |
+| `src/lib/` | `baseUrl()`, `getPublishedPosts()`, `getTags()` | internal links, post/tag queries |
 | `src/styles/` | 13 CSS files; map below | styling |
 | `public/assets/img/` | `.webp` post figures | images |
 | `public/fonts/` | font files | fonts |
@@ -66,7 +66,7 @@ Astro 6 static site, bun. Production base is `/` (`astro.config.mjs`). Module ma
 ## Standalone pages
 
 - `.astro` for layout-heavy pages; `.md` + `PageLayout` for prose.
-- Update **both** nav lists in `BaseLayout.astro` (mobile and desktop), and add the path to `src/pages/sitemap.xml.js`.
+- Update **both** nav lists in `BaseLayout.astro` (mobile and desktop). The sitemap is generated automatically by `@astrojs/sitemap`.
 - URLs use a trailing slash. Full recipe: `docs/ADD-PAGE.md`.
 
 ## Common tasks
