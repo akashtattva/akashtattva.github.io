@@ -29,7 +29,7 @@ description: "..."
 ```
 
 Use the schema in `src/content.config.ts`; do not copy frontmatter from another
-post. Start the body at `##` — the layout renders the title as the page `h1`.
+post. Start the body at `#` (h1).
 
 ## Step 1 — Read the markdown notes
 

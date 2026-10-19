@@ -37,7 +37,7 @@ Astro 6 static site, bun. Production base is `/` (`astro.config.mjs`). Module ma
 
 - Filename: `YYYY-MM-DD-<kebab-title>.md`. The filename without `.md` is the URL slug: `/posts/<filename>/`.
 - `.md` only — no MDX. Schema: `src/content.config.ts` (there is no `src/content/config.ts`).
-- Start the body at `##`; the layout renders the frontmatter `title` as the page `h1`.
+- Start the body at `#` (h1).
 - No cover images on this site. Do not add `image:` unless explicitly asked.
 - `draft: true` hides a post from lists, RSS, and the sitemap. `tags` auto-create `/tags/<tag>/`. Titles may contain inline HTML such as `<em>`.
 - Do not copy frontmatter from another post; use the schema.

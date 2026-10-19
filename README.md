@@ -58,7 +58,7 @@ Add a `.md` file to `src/content/posts/` named `YYYY-MM-DD-<slug>.md`. The
 filename is the URL slug. Frontmatter starts with `title`, `pubDate`, and an
 optional `description`; the full schema is in `src/content.config.ts`.
 
-Start the body at `##` (the layout renders the title as `h1`). Do not add a
+Start the body at `#` (h1). Do not add a
 cover `image:` unless asked.
 
 ## Diagrams
