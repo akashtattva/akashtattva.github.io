@@ -2,14 +2,15 @@
 
 ## Project Overview
 
-This is a static website/blog built with [Astro](https://astro.build) v5, using the "Terminal" theme (ported from Hugo). It uses TypeScript and Markdown for content.
+This is a static website/blog built with [Astro](https://astro.build) v6, using the "Terminal" theme (ported from Hugo). It uses TypeScript and Markdown for content.
 
 ## Quick Start
 
-- **Package Manager**: npm
-- **Development Server**: `npm run dev` (Runs locally)
-- **Build**: `npm run build` (Builds for production)
-- **Type Check**: `npm run check`
+- **Package Manager**: bun (pinned in `package.json` `packageManager`)
+- **Install**: `bun install`
+- **Development Server**: `bun run dev` (Runs locally)
+- **Build**: `bun run build` (Builds for production)
+- **Type Check**: `bun run check`
 
 ## Project Structure
 

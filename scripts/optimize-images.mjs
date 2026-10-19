@@ -9,8 +9,8 @@ const IMG_DIR = 'public/assets/img';
 //   --quality=<n>      override webp quality 0-100 (default 80)
 //   anything else      filename/prefix filter to convert only those
 // Examples:
-//   node scripts/optimize-images.mjs ch_fig
-//   node scripts/optimize-images.mjs ch_fig --max-width=1000 --quality=85
+//   bun scripts/optimize-images.mjs ch_fig
+//   bun scripts/optimize-images.mjs ch_fig --max-width=1000 --quality=85
 const args = process.argv.slice(2);
 const opt = {};
 for (const a of args) {

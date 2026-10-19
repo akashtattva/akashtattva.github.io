@@ -89,16 +89,16 @@ The prebuild script (`scripts/optimize-images.mjs`) converts PNGs in `public/ass
 
 ```bash
 # Convert only your new images (recommended — pass your prefix filter)
-node scripts/optimize-images.mjs <prefix>
+bun scripts/optimize-images.mjs <prefix>
 
 # Or convert everything (unchanged images are skipped anyway)
-node scripts/optimize-images.mjs
+bun scripts/optimize-images.mjs
 ```
 
 Resolution overrides — use when an 800px-wide WebP is too small to read a dense figure (e.g. a multi-column table or a full-page screenshot):
 
 ```bash
-node scripts/optimize-images.mjs <prefix> --max-width=1200 --quality=85
+bun scripts/optimize-images.mjs <prefix> --max-width=1200 --quality=85
 ```
 
 The default is 800px at quality 80. Existing posts keep using 800px; only raise it when the figure is genuinely unreadable, since bigger images cost page weight.
@@ -139,10 +139,10 @@ Convert caption pixels to crop percentages: `top% = 100 * (fig_top_y / page_heig
 
 ```bash
 # Crop a page screenshot by pixel coordinates
-node scripts/crop-images.mjs <prefix>_<desc>.png <left> <top> <width> <height>
+bun scripts/crop-images.mjs <prefix>_<desc>.png <left> <top> <width> <height>
 
 # Or by percentages (0-100), which is layout-independent and usually easier
-node scripts/crop-images.mjs <prefix>_<desc>.png 5 10 80 60 --pct --out <prefix>_fig<N>_<desc>.png
+bun scripts/crop-images.mjs <prefix>_<desc>.png 5 10 80 60 --pct --out <prefix>_fig<N>_<desc>.png
 ```
 
 The cropped result is saved as a new PNG (default `<name>_cropped.png`, or whatever `--out` gives you). Delete the original uncropped PNG, then run Step 5b to produce the WebP.

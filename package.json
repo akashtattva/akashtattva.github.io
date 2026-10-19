@@ -2,6 +2,7 @@
   "name": "Akash's Notes",
   "type": "module",
   "version": "1.0.0",
+  "packageManager": "bun@1.3.14",
   "description": "A personal tech blog powered by Astro and the Terminal theme",
   "license": "MIT",
   "author": "",
@@ -21,7 +22,7 @@
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro check && astro build",
-    "optimize-images": "node scripts/optimize-images.mjs",
+    "optimize-images": "bun scripts/optimize-images.mjs",
     "test": "vitest run",
     "preview": "astro preview",
     "astro": "astro"

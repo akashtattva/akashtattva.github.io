@@ -4,16 +4,16 @@
 
 ```bash
 # Install dependencies
-npm install
+bun install
 
 # Start development server
-npm run dev
+bun run dev
 
 # Build for production
-npm run build
+bun run build
 
 # Optimize images (run manually when you add new images)
-npm run optimize-images
+bun run optimize-images
 ```
 
 This site deploys through GitHub Actions.

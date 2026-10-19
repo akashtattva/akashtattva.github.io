@@ -6,14 +6,14 @@ const IMG_DIR = 'public/assets/img';
 // Crop a PNG/JPG in public/assets/img to the given region and save as a new PNG.
 //
 // Usage:
-//   node scripts/crop-images.mjs <file> <left> <top> <width> <height> [--out <name>]
+//   bun scripts/crop-images.mjs <file> <left> <top> <width> <height> [--out <name>]
 //
 // Coordinates are in pixels. Use --pct to interpret them as percentages
 // (0-100) of the image size instead.
 //
 // Examples:
-//   node scripts/crop-images.mjs ch_fig1_overview.png 50 100 800 600
-//   node scripts/crop-images.mjs ch_fig1_overview.png 5 10 80 60 --pct --out ch_fig1_overview_cropped.png
+//   bun scripts/crop-images.mjs ch_fig1_overview.png 50 100 800 600
+//   bun scripts/crop-images.mjs ch_fig1_overview.png 5 10 80 60 --pct --out ch_fig1_overview_cropped.png
 //
 // The cropped result is saved to <name>_cropped.png by default (or the value
 // passed to --out). Run optimize-images.mjs afterwards to make the WebP.
@@ -31,7 +31,7 @@ async function main() {
   const reqW = Number(w);
   const reqH = Number(h);
   if (!file || [left, top, reqW, reqH].some(n => !Number.isFinite(n) || n < 0)) {
-    console.error('Usage: node scripts/crop-images.mjs <file> <left> <top> <width> <height> [--out <name>] [--pct]');
+    console.error('Usage: bun scripts/crop-images.mjs <file> <left> <top> <width> <height> [--out <name>] [--pct]');
     process.exit(1);
   }
 

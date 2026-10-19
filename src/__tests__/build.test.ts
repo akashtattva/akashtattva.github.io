@@ -5,7 +5,7 @@ import { resolve } from 'path';
 
 describe('site build', () => {
   it('should build without errors', () => {
-    const result = execSync('npx astro build', {
+    const result = execSync('bunx astro build', {
       encoding: 'utf-8',
       cwd: resolve(__dirname, '../..'),
       timeout: 300000,
